@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Economic Inequality Attitudes — WVS Wave 7</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@300;400&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#fff;--text:#1a1a1a;--muted:#666;--dim:#999;--border:#e5e5e5;--active:#c0392b}
+html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:14px;line-height:1.5}
+
+.header{padding:28px 40px 18px;border-bottom:2px solid var(--text)}
+.header h1{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;letter-spacing:-.3px}
+.header .meta{margin-top:5px;font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.header .meta b{color:var(--text)}
+
+/* tabs — no Q numbers */
+.tabs{display:flex;border-bottom:1px solid var(--border);padding:0 40px;overflow-x:auto}
+.tab{padding:11px 0;margin-right:26px;font-size:12px;font-family:'IBM Plex Mono',monospace;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s;user-select:none}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--text);border-bottom-color:var(--active);font-weight:500}
+
+/* desc bar */
+.desc-bar{padding:9px 40px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:#fafafa}
+.desc-text{font-size:12px;color:var(--muted);flex:1;min-width:200px}
+.desc-text b{color:var(--text)}
+.legend-wrap{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.leg-lbl{font-size:11px;color:var(--dim);font-family:'IBM Plex Mono',monospace;white-space:nowrap}
+.leg-bar{width:200px;height:8px}
+.leg-ticks{display:flex;justify-content:space-between;width:200px;font-size:9px;color:var(--dim);font-family:'IBM Plex Mono',monospace;margin-top:2px}
+
+/* main layout */
+.main-wrap{display:flex;align-items:stretch;border-bottom:1px solid var(--border)}
+.map-wrap{flex:1;min-width:0;overflow:hidden}
+#map svg{width:100%;height:100%;display:block}
+
+.cp{stroke:#fff;stroke-width:.4;cursor:pointer;transition:opacity .1s}
+.cp:hover{opacity:.72;stroke:#555;stroke-width:.8}
+.nd{fill:#ebebeb;cursor:default;stroke:#ddd;stroke-width:.3}
+.nd:hover{opacity:1!important}
+
+/* sidebar */
+.sb{width:190px;flex-shrink:0;background:#fafafa;border-left:1px solid var(--border);padding:16px 14px;display:flex;flex-direction:column}
+.sb-title{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.sb-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:10px}
+.sb-tab{font-size:10px;font-family:'IBM Plex Mono',monospace;padding:4px 8px;cursor:pointer;color:var(--dim);border-bottom:2px solid transparent;transition:all .1s}
+.sb-tab.on{color:var(--text);border-bottom-color:var(--active);font-weight:500}
+.ri{display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.ri:last-child{border-bottom:none}
+.ri:hover .rm{text-decoration:underline}
+.rn{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);width:14px;text-align:right;flex-shrink:0}
+.rd{width:7px;height:7px;flex-shrink:0}
+.rm{font-size:11px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rv{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);flex-shrink:0}
+
+/* tooltip */
+.tip{position:fixed;pointer-events:none;background:#fff;border:1px solid #ccc;border-top:3px solid var(--active);padding:14px 16px;font-size:12px;min-width:230px;max-width:265px;opacity:0;transition:opacity .1s;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.tip.on{opacity:1}
+.tip-country{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:8px}
+.tip-section{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin:8px 0 4px}
+.tip-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;gap:12px}
+.tip-lbl{font-size:11px;color:var(--muted);flex:1}
+.tip-val{font-size:12px;font-weight:500;font-family:'IBM Plex Mono',monospace;flex-shrink:0}
+.tip-bar-wrap{position:relative;background:#f0f0f0;height:4px;margin:7px 0 9px}
+.tip-bar-zero{position:absolute;top:-2px;left:50%;width:1px;height:8px;background:#999}
+.tip-bar-fill{position:absolute;height:100%;top:0}
+.tip-n{font-size:10px;color:var(--dim);font-family:'IBM Plex Mono',monospace;margin-top:8px;border-top:1px solid var(--border);padding-top:6px}
+
+.footer{padding:12px 40px;display:flex;gap:28px;flex-wrap:wrap;font-size:11px;color:var(--dim);font-family:'IBM Plex Mono',monospace;line-height:1.6}
+.footer b{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Economic Inequality Attitudes</h1>
+  <div class="meta"><b>World Values Survey</b> · Wave 7 (2017–2022) · 66 countries · n ≈ 96,000 · Z-score relative to global mean</div>
+</div>
+
+<div class="tabs" id="tabs"></div>
+<div class="desc-bar" id="desc-bar"></div>
+
+<div class="main-wrap">
+  <div class="map-wrap">
+    <div id="map"></div>
+  </div>
+  <div class="sb">
+    <div class="sb-title">Rankings</div>
+    <div class="sb-tabs">
+      <div class="sb-tab on" onclick="showR(true)">Highest</div>
+      <div class="sb-tab" onclick="showR(false)">Lowest</div>
+    </div>
+    <div id="rlist"></div>
+  </div>
+</div>
+
+<div class="tip" id="tip"></div>
+
+<div class="footer">
+  <span><b>Z-score:</b> standardized relative to global pooled mean & SD. 0 = global average. Positive = above average on the high-end label.</span>
+  <span><b>Source:</b> World Values Survey Wave 7 (2017–2022), WVSA. Valid responses 1–10 only.</span>
+</div>
+
+<script>
+const DATA = {
+"AND":{"name":"Andorra","eq106":0.0467,"eq106_raw":4.858,"eq106_n":1004,"eq107":-0.2066,"eq107_raw":5.063,"eq107_n":1002,"eq108":0.1866,"eq108_raw":6.533,"eq108_n":1003,"eq109":-0.3409,"eq109_raw":3.132,"eq109_n":1004,"eq110":0.0385,"eq110_raw":4.575,"eq110_n":1003},
+"ARG":{"name":"Argentina","eq106":0.2399,"eq106_raw":5.435,"eq106_n":980,"eq107":0.1619,"eq107_raw":6.105,"eq107_n":912,"eq108":0.0031,"eq108_raw":5.981,"eq108_n":963,"eq109":0.2463,"eq109_raw":4.739,"eq109_n":976,"eq110":0.0777,"eq110_raw":4.69,"eq110_n":975},
+"ARM":{"name":"Armenia","eq106":-0.8923,"eq106_raw":2.053,"eq106_n":1214,"eq107":0.3531,"eq107_raw":6.646,"eq107_n":1186,"eq108":0.2828,"eq108_raw":6.823,"eq108_n":1219,"eq109":-0.4024,"eq109_raw":2.964,"eq109_n":1210,"eq110":-0.1306,"eq110_raw":4.079,"eq110_n":1215},
+"AUS":{"name":"Australia","eq106":0.0929,"eq106_raw":4.996,"eq106_n":1789,"eq107":-0.2009,"eq107_raw":5.079,"eq107_n":1785,"eq108":-0.1029,"eq108_raw":5.662,"eq108_n":1791,"eq109":-0.1778,"eq109_raw":3.579,"eq109_n":1792,"eq110":-0.0751,"eq110_raw":4.242,"eq110_n":1791},
+"BGD":{"name":"Bangladesh","eq106":0.7768,"eq106_raw":7.038,"eq106_n":1200,"eq107":-0.2356,"eq107_raw":4.981,"eq107_n":1200,"eq108":0.2539,"eq108_raw":6.736,"eq108_n":1200,"eq109":-0.2297,"eq109_raw":3.437,"eq109_n":1200,"eq110":-0.3796,"eq110_raw":3.348,"eq110_n":1200},
+"BOL":{"name":"Bolivia","eq106":-0.0484,"eq106_raw":4.573,"eq106_n":2014,"eq107":0.2976,"eq107_raw":6.489,"eq107_n":1951,"eq108":-0.2359,"eq108_raw":5.262,"eq108_n":2026,"eq109":0.362,"eq109_raw":5.055,"eq109_n":2038,"eq110":-0.0277,"eq110_raw":4.381,"eq110_n":2029},
+"BRA":{"name":"Brazil","eq106":0.4011,"eq106_raw":5.916,"eq106_n":1695,"eq107":-0.2555,"eq107_raw":4.925,"eq107_n":1644,"eq108":0.4919,"eq108_raw":7.452,"eq108_n":1720,"eq109":-0.1096,"eq109_raw":3.765,"eq109_n":1682,"eq110":0.059,"eq110_raw":4.636,"eq110_n":1704},
+"CAN":{"name":"Canada","eq106":0.2493,"eq106_raw":5.463,"eq106_n":4018,"eq107":-0.2595,"eq107_raw":4.913,"eq107_n":4018,"eq108":-0.1661,"eq108_raw":5.472,"eq108_n":4018,"eq109":0.041,"eq109_raw":4.177,"eq109_n":4018,"eq110":0.1523,"eq110_raw":4.909,"eq110_n":4018},
+"CHL":{"name":"Chile","eq106":0.783,"eq106_raw":7.057,"eq106_n":986,"eq107":-0.0091,"eq107_raw":5.621,"eq107_n":914,"eq108":0.1976,"eq108_raw":6.566,"eq108_n":978,"eq109":0.2029,"eq109_raw":4.62,"eq109_n":971,"eq110":0.0787,"eq110_raw":4.693,"eq110_n":968},
+"CHN":{"name":"China","eq106":0.2535,"eq106_raw":5.475,"eq106_n":3026,"eq107":0.026,"eq107_raw":5.721,"eq107_n":3003,"eq108":-0.0679,"eq108_raw":5.768,"eq108_n":3024,"eq109":-0.2486,"eq109_raw":3.385,"eq109_n":3021,"eq110":-0.2516,"eq110_raw":3.724,"eq110_n":3021},
+"COL":{"name":"Colombia","eq106":-0.0058,"eq106_raw":4.701,"eq106_n":1520,"eq107":0.1282,"eq107_raw":6.01,"eq107_n":1520,"eq108":-0.1818,"eq108_raw":5.425,"eq108_n":1520,"eq109":0.1961,"eq109_raw":4.601,"eq109_n":1520,"eq110":0.1431,"eq110_raw":4.882,"eq110_n":1520},
+"CYP":{"name":"Cyprus","eq106":0.493,"eq106_raw":6.191,"eq106_n":981,"eq107":-0.3044,"eq107_raw":4.786,"eq107_n":950,"eq108":0.2378,"eq108_raw":6.687,"eq108_n":988,"eq109":-0.093,"eq109_raw":3.811,"eq109_n":971,"eq110":0.337,"eq110_raw":5.451,"eq110_n":988},
+"CZE":{"name":"Czechia","eq106":-0.1089,"eq106_raw":4.393,"eq106_n":1199,"eq107":-0.0238,"eq107_raw":5.58,"eq107_n":1183,"eq108":-0.1025,"eq108_raw":5.664,"eq108_n":1192,"eq109":-0.1354,"eq109_raw":3.695,"eq109_n":1195,"eq110":0.3581,"eq110_raw":5.513,"eq110_n":1194},
+"DEU":{"name":"Germany","eq106":0.158,"eq106_raw":5.19,"eq106_n":1506,"eq107":-0.1159,"eq107_raw":5.319,"eq107_n":1418,"eq108":0.0425,"eq108_raw":6.1,"eq108_n":1513,"eq109":-0.2203,"eq109_raw":3.462,"eq109_n":1503,"eq110":0.2875,"eq110_raw":5.306,"eq110_n":1516},
+"ECU":{"name":"Ecuador","eq106":0.0761,"eq106_raw":4.945,"eq106_n":1190,"eq107":0.0805,"eq107_raw":5.875,"eq107_n":1167,"eq108":0.0099,"eq108_raw":6.002,"eq108_n":1195,"eq109":0.2895,"eq109_raw":4.857,"eq109_n":1193,"eq110":-0.193,"eq110_raw":3.896,"eq110_n":1191},
+"EGY":{"name":"Egypt","eq106":-0.155,"eq106_raw":4.255,"eq106_n":1192,"eq107":0.2677,"eq107_raw":6.404,"eq107_n":1140,"eq108":0.8256,"eq108_raw":8.456,"eq108_n":1200,"eq109":-0.5378,"eq109_raw":2.594,"eq109_n":1138,"eq110":-0.1977,"eq110_raw":3.882,"eq110_n":1188},
+"ETH":{"name":"Ethiopia","eq106":-0.0608,"eq106_raw":4.537,"eq106_n":1219,"eq107":0.1253,"eq107_raw":6.002,"eq107_n":1188,"eq108":0.0572,"eq108_raw":6.144,"eq108_n":1215,"eq109":-0.8441,"eq109_raw":1.756,"eq109_n":1226,"eq110":-0.7514,"eq110_raw":2.257,"eq110_n":1226},
+"GBR":{"name":"Great Britain","eq106":0.1786,"eq106_raw":5.251,"eq106_n":2561,"eq107":-0.0839,"eq107_raw":5.41,"eq107_n":2503,"eq108":0.0592,"eq108_raw":6.15,"eq108_n":2559,"eq109":-0.0747,"eq109_raw":3.861,"eq109_n":2557,"eq110":0.0513,"eq110_raw":4.613,"eq110_n":2575},
+"GRC":{"name":"Greece","eq106":0.3241,"eq106_raw":5.686,"eq106_n":1163,"eq107":-0.3427,"eq107_raw":4.678,"eq107_n":1149,"eq108":0.4332,"eq108_raw":7.275,"eq108_n":1195,"eq109":0.0221,"eq109_raw":4.125,"eq109_n":1188,"eq110":0.2754,"eq110_raw":5.271,"eq110_n":1197},
+"GTM":{"name":"Guatemala","eq106":-0.296,"eq106_raw":3.834,"eq106_n":1216,"eq107":0.1241,"eq107_raw":5.998,"eq107_n":1203,"eq108":-0.232,"eq108_raw":5.274,"eq108_n":1205,"eq109":0.2511,"eq109_raw":4.752,"eq109_n":1208,"eq110":0.0217,"eq110_raw":4.526,"eq110_n":1207},
+"HKG":{"name":"Hong Kong SAR","eq106":-0.0088,"eq106_raw":4.692,"eq106_n":2070,"eq107":-0.0107,"eq107_raw":5.617,"eq107_n":2055,"eq108":-0.1975,"eq108_raw":5.378,"eq108_n":2065,"eq109":0.0026,"eq109_raw":4.072,"eq109_n":2065,"eq110":0.0866,"eq110_raw":4.716,"eq110_n":2073},
+"IDN":{"name":"Indonesia","eq106":-0.1692,"eq106_raw":4.213,"eq106_n":3187,"eq107":0.3357,"eq107_raw":6.597,"eq107_n":3184,"eq108":-0.0328,"eq108_raw":5.873,"eq108_n":3190,"eq109":0.1178,"eq109_raw":4.387,"eq109_n":3193,"eq110":-0.1835,"eq110_raw":3.924,"eq110_n":3192},
+"IND":{"name":"India","eq106":-0.2852,"eq106_raw":3.866,"eq106_n":1651,"eq107":0.269,"eq107_raw":6.408,"eq107_n":1649,"eq108":-0.125,"eq108_raw":5.596,"eq108_n":1653,"eq109":0.3577,"eq109_raw":5.043,"eq109_n":1612,"eq110":0.0269,"eq110_raw":4.541,"eq110_n":1655},
+"IRN":{"name":"Iran","eq106":-0.1912,"eq106_raw":4.147,"eq106_n":1490,"eq107":0.1578,"eq107_raw":6.094,"eq107_n":1474,"eq108":0.2987,"eq108_raw":6.871,"eq108_n":1492,"eq109":-0.1952,"eq109_raw":3.531,"eq109_n":1486,"eq110":-0.1972,"eq110_raw":3.883,"eq110_n":1493},
+"IRQ":{"name":"Iraq","eq106":0.5215,"eq106_raw":6.276,"eq106_n":1200,"eq107":-0.3868,"eq107_raw":4.553,"eq107_n":1200,"eq108":-0.9526,"eq108_raw":3.106,"eq108_n":1200,"eq109":1.1231,"eq109_raw":7.137,"eq109_n":1200,"eq110":0.8008,"eq110_raw":6.812,"eq110_n":1200},
+"JOR":{"name":"Jordan","eq106":-0.5621,"eq106_raw":3.039,"eq106_n":1201,"eq107":-0.0407,"eq107_raw":5.532,"eq107_n":1167,"eq108":0.6858,"eq108_raw":8.035,"eq108_n":1198,"eq109":-0.5475,"eq109_raw":2.567,"eq109_n":1188,"eq110":-0.3798,"eq110_raw":3.348,"eq110_n":1202},
+"JPN":{"name":"Japan","eq106":0.3099,"eq106_raw":5.644,"eq106_n":1277,"eq107":-0.5796,"eq107_raw":4.008,"eq107_n":1134,"eq108":0.3584,"eq108_raw":7.05,"eq108_n":1316,"eq109":0.185,"eq109_raw":4.571,"eq109_n":1270,"eq110":0.1348,"eq110_raw":4.858,"eq110_n":1273},
+"KAZ":{"name":"Kazakhstan","eq106":-0.3509,"eq106_raw":3.67,"eq106_n":1248,"eq107":0.046,"eq107_raw":5.777,"eq107_n":1208,"eq108":0.0392,"eq108_raw":6.09,"eq108_n":1248,"eq109":0.2072,"eq109_raw":4.632,"eq109_n":1233,"eq110":0.0257,"eq110_raw":4.538,"eq110_n":1261},
+"KEN":{"name":"Kenya","eq106":-0.0308,"eq106_raw":4.626,"eq106_n":1257,"eq107":-0.2604,"eq107_raw":4.911,"eq107_n":1257,"eq108":0.1242,"eq108_raw":6.346,"eq108_n":1256,"eq109":-0.1749,"eq109_raw":3.587,"eq109_n":1253,"eq110":-0.2731,"eq110_raw":3.661,"eq110_n":1256},
+"KGZ":{"name":"Kyrgyzstan","eq106":-0.8302,"eq106_raw":2.238,"eq106_n":1192,"eq107":0.3584,"eq107_raw":6.661,"eq107_n":1174,"eq108":-0.0263,"eq108_raw":5.893,"eq108_n":1192,"eq109":0.1339,"eq109_raw":4.431,"eq109_n":1190,"eq110":-0.4038,"eq110_raw":3.277,"eq110_n":1187},
+"KOR":{"name":"South Korea","eq106":-0.1267,"eq106_raw":4.34,"eq106_n":1245,"eq107":0.0125,"eq107_raw":5.683,"eq107_n":1245,"eq108":-0.0801,"eq108_raw":5.731,"eq108_n":1245,"eq109":0.2482,"eq109_raw":4.744,"eq109_n":1245,"eq110":0.3687,"eq110_raw":5.545,"eq110_n":1245},
+"LBN":{"name":"Lebanon","eq106":0.1285,"eq106_raw":5.102,"eq106_n":1196,"eq107":-0.0804,"eq107_raw":5.42,"eq107_n":1191,"eq108":0.0853,"eq108_raw":6.228,"eq108_n":1200,"eq109":0.1621,"eq109_raw":4.508,"eq109_n":1188,"eq110":0.1815,"eq110_raw":4.995,"eq110_n":1196},
+"LBY":{"name":"Libya","eq106":-0.1497,"eq106_raw":4.271,"eq106_n":1034,"eq107":0.5391,"eq107_raw":7.172,"eq107_n":1006,"eq108":0.1712,"eq108_raw":6.487,"eq108_n":1080,"eq109":-0.1638,"eq109_raw":3.617,"eq109_n":1055,"eq110":0.2703,"eq110_raw":5.256,"eq110_n":806},
+"MAC":{"name":"Macau SAR","eq106":0.1419,"eq106_raw":5.142,"eq106_n":1021,"eq107":-0.0709,"eq107_raw":5.447,"eq107_n":1016,"eq108":-0.1244,"eq108_raw":5.597,"eq108_n":1021,"eq109":-0.0018,"eq109_raw":4.06,"eq109_n":1018,"eq110":0.1745,"eq110_raw":4.975,"eq110_n":1022},
+"MAR":{"name":"Morocco","eq106":-0.0529,"eq106_raw":4.56,"eq106_n":1200,"eq107":-0.0282,"eq107_raw":5.567,"eq107_n":1200,"eq108":0.072,"eq108_raw":6.188,"eq108_n":1200,"eq109":-0.1685,"eq109_raw":3.604,"eq109_n":1200,"eq110":-0.0811,"eq110_raw":4.224,"eq110_n":1200},
+"MDV":{"name":"Maldives","eq106":0.38,"eq106_raw":5.853,"eq106_n":1036,"eq107":-0.3203,"eq107_raw":4.741,"eq107_n":1036,"eq108":0.2373,"eq108_raw":6.686,"eq108_n":1038,"eq109":-0.0512,"eq109_raw":3.925,"eq109_n":1037,"eq110":-0.3926,"eq110_raw":3.31,"eq110_n":1039},
+"MEX":{"name":"Mexico","eq106":0.1788,"eq106_raw":5.252,"eq106_n":1728,"eq107":0.055,"eq107_raw":5.803,"eq107_n":1670,"eq108":-0.0239,"eq108_raw":5.9,"eq108_n":1729,"eq109":0.1194,"eq109_raw":4.392,"eq109_n":1729,"eq110":-0.1026,"eq110_raw":4.161,"eq110_n":1726},
+"MMR":{"name":"Myanmar","eq106":0.0746,"eq106_raw":4.941,"eq106_n":1200,"eq107":0.1904,"eq107_raw":6.186,"eq107_n":1200,"eq108":0.1639,"eq108_raw":6.465,"eq108_n":1200,"eq109":-0.0219,"eq109_raw":4.005,"eq109_n":1200,"eq110":-0.212,"eq110_raw":3.84,"eq110_n":1200},
+"MNG":{"name":"Mongolia","eq106":-0.1846,"eq106_raw":4.167,"eq106_n":1638,"eq107":0.0962,"eq107_raw":5.919,"eq107_n":1638,"eq108":-0.4048,"eq108_raw":4.754,"eq108_n":1638,"eq109":0.3162,"eq109_raw":4.93,"eq109_n":1638,"eq110":0.1002,"eq110_raw":4.756,"eq110_n":1638},
+"MYS":{"name":"Malaysia","eq106":-0.0609,"eq106_raw":4.536,"eq106_n":1313,"eq107":-0.0694,"eq107_raw":5.451,"eq107_n":1313,"eq108":-0.0772,"eq108_raw":5.74,"eq108_n":1313,"eq109":0.0478,"eq109_raw":4.196,"eq109_n":1313,"eq110":0.1118,"eq110_raw":4.791,"eq110_n":1313},
+"NGA":{"name":"Nigeria","eq106":-0.4208,"eq106_raw":3.461,"eq106_n":1232,"eq107":0.3595,"eq107_raw":6.664,"eq107_n":1233,"eq108":0.434,"eq108_raw":7.278,"eq108_n":1236,"eq109":-0.1679,"eq109_raw":3.606,"eq109_n":1235,"eq110":0.0127,"eq110_raw":4.5,"eq110_n":1233},
+"NIC":{"name":"Nicaragua","eq106":-0.2083,"eq106_raw":4.096,"eq106_n":1200,"eq107":0.1574,"eq107_raw":6.093,"eq107_n":1200,"eq108":-0.4959,"eq108_raw":4.48,"eq108_n":1200,"eq109":0.5384,"eq109_raw":5.537,"eq109_n":1200,"eq110":0.2227,"eq110_raw":5.116,"eq110_n":1200},
+"NIR":{"name":"N. Ireland","eq106":0.1862,"eq106_raw":5.274,"eq106_n":445,"eq107":-0.2814,"eq107_raw":4.851,"eq107_n":437,"eq108":0.1269,"eq108_raw":6.354,"eq108_n":444,"eq109":-0.1489,"eq109_raw":3.658,"eq109_n":444,"eq110":-0.0677,"eq110_raw":4.264,"eq110_n":444},
+"NLD":{"name":"Netherlands","eq106":0.3531,"eq106_raw":5.773,"eq106_n":1977,"eq107":-0.1064,"eq107_raw":5.346,"eq107_n":1689,"eq108":0.021,"eq108_raw":6.035,"eq108_n":1969,"eq109":0.2244,"eq109_raw":4.679,"eq109_n":1918,"eq110":0.1307,"eq110_raw":4.846,"eq110_n":1961},
+"NZL":{"name":"New Zealand","eq106":0.0742,"eq106_raw":4.94,"eq106_n":979,"eq107":-0.4268,"eq107_raw":4.44,"eq107_n":927,"eq108":-0.279,"eq108_raw":5.132,"eq108_n":982,"eq109":-0.2586,"eq109_raw":3.358,"eq109_n":990,"eq110":-0.142,"eq110_raw":4.046,"eq110_n":986},
+"PAK":{"name":"Pakistan","eq106":-0.3038,"eq106_raw":3.811,"eq106_n":1981,"eq107":0.1433,"eq107_raw":6.053,"eq107_n":1934,"eq108":-0.0872,"eq108_raw":5.709,"eq108_n":1989,"eq109":0.1006,"eq109_raw":4.34,"eq109_n":1970,"eq110":-0.1079,"eq110_raw":4.146,"eq110_n":1976},
+"PER":{"name":"Peru","eq106":0.1067,"eq106_raw":5.037,"eq106_n":1356,"eq107":0.1236,"eq107_raw":5.997,"eq107_n":1321,"eq108":-0.0745,"eq108_raw":5.748,"eq108_n":1371,"eq109":-0.2046,"eq109_raw":3.505,"eq109_n":1371,"eq110":-0.3216,"eq110_raw":3.519,"eq110_n":1375},
+"PHL":{"name":"Philippines","eq106":0.0143,"eq106_raw":4.761,"eq106_n":1200,"eq107":0.2641,"eq107_raw":6.394,"eq107_n":1200,"eq108":-0.2975,"eq108_raw":5.077,"eq108_n":1200,"eq109":0.0835,"eq109_raw":4.293,"eq109_n":1197,"eq110":-0.2183,"eq110_raw":3.822,"eq110_n":1200},
+"PRI":{"name":"Puerto Rico","eq106":-0.3533,"eq106_raw":3.663,"eq106_n":1121,"eq107":-0.0082,"eq107_raw":5.624,"eq107_n":1104,"eq108":-0.397,"eq108_raw":4.777,"eq108_n":1118,"eq109":-0.0537,"eq109_raw":3.918,"eq109_n":1123,"eq110":-0.0803,"eq110_raw":4.227,"eq110_n":1121},
+"ROU":{"name":"Romania","eq106":-0.4437,"eq106_raw":3.393,"eq106_n":1235,"eq107":0.0748,"eq107_raw":5.859,"eq107_n":1184,"eq108":-0.2388,"eq108_raw":5.253,"eq108_n":1223,"eq109":-0.3639,"eq109_raw":3.07,"eq109_n":1193,"eq110":-0.4305,"eq110_raw":3.199,"eq110_n":1238},
+"RUS":{"name":"Russia","eq106":-0.142,"eq106_raw":4.294,"eq106_n":1769,"eq107":0.2792,"eq107_raw":6.437,"eq107_n":1629,"eq108":0.2109,"eq108_raw":6.606,"eq108_n":1791,"eq109":0.1285,"eq109_raw":4.416,"eq109_n":1710,"eq110":0.1162,"eq110_raw":4.803,"eq110_n":1781},
+"SGP":{"name":"Singapore","eq106":-0.2232,"eq106_raw":4.051,"eq106_n":2001,"eq107":-0.1869,"eq107_raw":5.119,"eq107_n":1996,"eq108":0.0122,"eq108_raw":6.008,"eq108_n":2007,"eq109":-0.0602,"eq109_raw":3.9,"eq109_n":2007,"eq110":0.0074,"eq110_raw":4.484,"eq110_n":2008},
+"SRB":{"name":"Serbia","eq106":-0.042,"eq106_raw":4.593,"eq106_n":1016,"eq107":0.0978,"eq107_raw":5.924,"eq107_n":959,"eq108":0.2621,"eq108_raw":6.76,"eq108_n":1022,"eq109":-0.0341,"eq109_raw":3.972,"eq109_n":1024,"eq110":0.4137,"eq110_raw":5.676,"eq110_n":1020},
+"SVK":{"name":"Slovakia","eq106":0.1551,"eq106_raw":5.181,"eq106_n":1196,"eq107":0.0659,"eq107_raw":5.834,"eq107_n":1167,"eq108":0.0867,"eq108_raw":6.233,"eq108_n":1199,"eq109":-0.0155,"eq109_raw":4.023,"eq109_n":1190,"eq110":0.4195,"eq110_raw":5.693,"eq110_n":1197},
+"THA":{"name":"Thailand","eq106":0.2564,"eq106_raw":5.484,"eq106_n":1484,"eq107":0.1972,"eq107_raw":6.205,"eq107_n":1473,"eq108":-0.0896,"eq108_raw":5.702,"eq108_n":1484,"eq109":0.4383,"eq109_raw":5.264,"eq109_n":1479,"eq110":0.1167,"eq110_raw":4.805,"eq110_n":1487},
+"TJK":{"name":"Tajikistan","eq106":-0.5961,"eq106_raw":2.938,"eq106_n":1200,"eq107":0.66,"eq107_raw":7.514,"eq107_n":1200,"eq108":-0.11,"eq108_raw":5.641,"eq108_n":1200,"eq109":0.1289,"eq109_raw":4.418,"eq109_n":1200,"eq110":0.4933,"eq110_raw":5.91,"eq110_n":1200},
+"TUN":{"name":"Tunisia","eq106":-0.0293,"eq106_raw":4.631,"eq106_n":1202,"eq107":0.3668,"eq107_raw":6.685,"eq107_n":1190,"eq108":0.5126,"eq108_raw":7.514,"eq108_n":1202,"eq109":-0.4157,"eq109_raw":2.928,"eq109_n":1196,"eq110":-0.3095,"eq110_raw":3.554,"eq110_n":1204},
+"TUR":{"name":"Turkey","eq106":0.3577,"eq106_raw":5.787,"eq106_n":2362,"eq107":0.1597,"eq107_raw":6.099,"eq107_n":2296,"eq108":0.0432,"eq108_raw":6.102,"eq108_n":2364,"eq109":0.2149,"eq109_raw":4.653,"eq109_n":2385,"eq110":0.2575,"eq110_raw":5.218,"eq110_n":2395},
+"TWN":{"name":"Taiwan ROC","eq106":-0.3124,"eq106_raw":3.785,"eq106_n":1223,"eq107":-0.1559,"eq107_raw":5.206,"eq107_n":1222,"eq108":-0.1534,"eq108_raw":5.51,"eq108_n":1223,"eq109":-0.256,"eq109_raw":3.365,"eq109_n":1223,"eq110":-0.06,"eq110_raw":4.286,"eq110_n":1223},
+"UKR":{"name":"Ukraine","eq106":0.0405,"eq106_raw":4.839,"eq106_n":1236,"eq107":0.1804,"eq107_raw":6.158,"eq107_n":1129,"eq108":0.1991,"eq108_raw":6.571,"eq108_n":1240,"eq109":0.0283,"eq109_raw":4.142,"eq109_n":1215,"eq110":0.2065,"eq110_raw":5.068,"eq110_n":1245},
+"URY":{"name":"Uruguay","eq106":0.0267,"eq106_raw":4.798,"eq106_n":985,"eq107":-0.0247,"eq107_raw":5.577,"eq107_n":873,"eq108":-0.129,"eq108_raw":5.584,"eq108_n":987,"eq109":0.1141,"eq109_raw":4.377,"eq109_n":971,"eq110":0.2834,"eq110_raw":5.294,"eq110_n":983},
+"USA":{"name":"United States","eq106":0.4541,"eq106_raw":6.075,"eq106_n":2574,"eq107":-0.6944,"eq107_raw":3.683,"eq107_n":2573,"eq108":-0.1802,"eq108_raw":5.43,"eq108_n":2577,"eq109":-0.3049,"eq109_raw":3.231,"eq109_n":2576,"eq110":-0.2346,"eq110_raw":3.774,"eq110_n":2581},
+"UZB":{"name":"Uzbekistan","eq106":-0.3592,"eq106_raw":3.645,"eq106_n":1215,"eq107":-0.205,"eq107_raw":5.067,"eq107_n":1187,"eq108":-0.3304,"eq108_raw":4.978,"eq108_n":1212,"eq109":-0.2741,"eq109_raw":3.315,"eq109_n":1215,"eq110":0.4956,"eq110_raw":5.917,"eq110_n":1214},
+"VEN":{"name":"Venezuela","eq106":-0.293,"eq106_raw":3.843,"eq106_n":1190,"eq107":-0.1356,"eq107_raw":5.264,"eq107_n":1190,"eq108":-0.3697,"eq108_raw":4.86,"eq108_n":1190,"eq109":0.3953,"eq109_raw":5.146,"eq109_n":1190,"eq110":0.1841,"eq110_raw":5.003,"eq110_n":1190},
+"VNM":{"name":"Vietnam","eq106":-0.6988,"eq106_raw":2.631,"eq106_n":1200,"eq107":-0.3983,"eq107_raw":4.521,"eq107_n":1200,"eq108":-0.2577,"eq108_raw":5.197,"eq108_n":1200,"eq109":-0.2718,"eq109_raw":3.322,"eq109_n":1200,"eq110":-0.316,"eq110_raw":3.535,"eq110_n":1200},
+"ZWE":{"name":"Zimbabwe","eq106":-0.0561,"eq106_raw":4.551,"eq106_n":1215,"eq107":-0.0477,"eq107_raw":5.512,"eq107_n":1210,"eq108":0.4261,"eq108_raw":7.254,"eq108_n":1214,"eq109":0.0384,"eq109_raw":4.17,"eq109_n":1212,"eq110":-0.6694,"eq110_raw":2.498,"eq110_n":1214}
+};
+
+const QUESTIONS = {
+  eq106:{short:"Income equality",desc:'<b>High</b> = support for income equality &nbsp;·&nbsp; <b>Low</b> = preference for individual effort incentives',lo:"Individual effort →",hi:"← Income equality",other:["eq107","eq108","eq109","eq110"],otherLabel:["State ownership","Gov't responsibility","Competition harmful","Luck & connections"]},
+  eq107:{short:"State ownership",desc:'<b>High</b> = support for government ownership &nbsp;·&nbsp; <b>Low</b> = preference for private ownership',lo:"Private ownership →",hi:"← State ownership",other:["eq106","eq108","eq109","eq110"],otherLabel:["Income equality","Gov't responsibility","Competition harmful","Luck & connections"]},
+  eq108:{short:"Gov't responsibility",desc:'<b>High</b> = government should ensure welfare &nbsp;·&nbsp; <b>Low</b> = individual responsibility',lo:"Individual resp. →",hi:"← Gov't responsibility",other:["eq106","eq107","eq109","eq110"],otherLabel:["Income equality","State ownership","Competition harmful","Luck & connections"]},
+  eq109:{short:"Competition harmful",desc:'<b>High</b> = competition seen as harmful &nbsp;·&nbsp; <b>Low</b> = competition seen as beneficial',lo:"Competition beneficial →",hi:"← Competition harmful",other:["eq106","eq107","eq108","eq110"],otherLabel:["Income equality","State ownership","Gov't responsibility","Luck & connections"]},
+  eq110:{short:"Luck & connections",desc:'<b>High</b> = success attributed to luck/connections &nbsp;·&nbsp; <b>Low</b> = hard work brings success',lo:"Hard work →",hi:"← Luck & connections",other:["eq106","eq107","eq108","eq109"],otherLabel:["Income equality","State ownership","Gov't responsibility","Competition harmful"]}
+};
+
+const Q_ORDER = ["eq106","eq107","eq108","eq109","eq110"];
+let activeQ = "eq106", rankTop = true;
+
+// diverging: blue (below avg) → white (avg) → red (above avg)
+const colorScale = d3.scaleSequential()
+  .domain([-1.15, 1.15])
+  .interpolator(d3.interpolateRgbBasis(["#f7e4d4","#f0b99a","#e07d52","#c44b20","#8b1a08"]));
+
+function makeColor(z){
+  if(z===null) return '#e8e8e8';
+  return colorScale(Math.max(-1.15, Math.min(1.15, z)));
+}
+
+/* TABS — no Q numbers */
+const tabsEl = document.getElementById('tabs');
+Q_ORDER.forEach(q => {
+  const el = document.createElement('div');
+  el.className = 'tab'+(q===activeQ?' active':'');
+  el.textContent = QUESTIONS[q].short;
+  el.onclick = () => switchQ(q);
+  tabsEl.appendChild(el);
+});
+
+/* DESC BAR with diverging legend */
+function renderDesc(){
+  const cfg = QUESTIONS[activeQ];
+  document.getElementById('desc-bar').innerHTML = `
+    <div class="desc-text">${cfg.desc}</div>
+    <div>
+      <div class="legend-wrap">
+        <span class="leg-lbl">${cfg.lo}</span>
+        <div>
+          <canvas id="lgrd" class="leg-bar" width="200" height="8"></canvas>
+          <div class="leg-ticks"><span>−1.2</span><span>−0.6</span><span>0</span><span>+0.6</span><span>+1.2</span></div>
+        </div>
+        <span class="leg-lbl">${cfg.hi}</span>
+      </div>
+    </div>`;
+  const c=document.getElementById('lgrd'),ctx=c.getContext('2d');
+  const g=ctx.createLinearGradient(0,0,200,0);
+  for(let i=0;i<=1;i+=0.02) g.addColorStop(i, makeColor(-1.15+i*2.3));
+  ctx.fillStyle=g; ctx.fillRect(0,0,200,8);
+}
+
+/* MAP */
+const W=960, H=500;
+const proj = d3.geoNaturalEarth1().scale(153).translate([W/2, H/2]);
+const pathFn = d3.geoPath().projection(proj);
+const svg = d3.select('#map').append('svg')
+  .attr('viewBox',`0 0 ${W} ${H}`)
+  .attr('preserveAspectRatio','xMidYMid meet')
+  .style('width','100%').style('height','100%');
+
+svg.append('path').datum({type:'Sphere'}).attr('d',pathFn).attr('fill','#dce9f2');
+svg.append('path').datum(d3.geoGraticule()()).attr('d',pathFn)
+  .attr('fill','none').attr('stroke','rgba(255,255,255,.5)').attr('stroke-width',.35);
+
+const n2a={4:"AFG",8:"ALB",12:"DZA",20:"AND",24:"AGO",32:"ARG",36:"AUS",40:"AUT",50:"BGD",56:"BEL",68:"BOL",76:"BRA",100:"BGR",104:"MMR",116:"KHM",120:"CMR",124:"CAN",152:"CHL",156:"CHN",170:"COL",188:"CRI",191:"HRV",192:"CUB",196:"CYP",203:"CZE",208:"DNK",214:"DOM",218:"ECU",818:"EGY",231:"ETH",246:"FIN",250:"FRA",276:"DEU",288:"GHA",300:"GRC",320:"GTM",340:"HND",348:"HUN",356:"IND",360:"IDN",364:"IRN",368:"IRQ",372:"IRL",376:"ISR",380:"ITA",392:"JPN",400:"JOR",398:"KAZ",404:"KEN",410:"KOR",417:"KGZ",422:"LBN",434:"LBY",446:"MAC",458:"MYS",462:"MDV",484:"MEX",496:"MNG",504:"MAR",528:"NLD",554:"NZL",558:"NIC",566:"NGA",578:"NOR",586:"PAK",604:"PER",608:"PHL",616:"POL",620:"PRT",630:"PRI",642:"ROU",643:"RUS",703:"SVK",710:"ZAF",724:"ESP",752:"SWE",756:"CHE",762:"TJK",764:"THA",788:"TUN",792:"TUR",804:"UKR",826:"GBR",840:"USA",858:"URY",860:"UZB",862:"VEN",704:"VNM",716:"ZWE",688:"SRB",51:"ARM",702:"SGP",344:"HKG",158:"TWN",112:"BLR",807:"MKD",499:"MNE",31:"AZE",268:"GEO",144:"LKA",800:"UGA",834:"TZA"};
+
+let countryPaths;
+fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+  .then(r=>r.json())
+  .then(world=>{
+    const countries=topojson.feature(world,world.objects.countries);
+    countryPaths=svg.append('g').selectAll('path')
+      .data(countries.features).join('path')
+      .attr('class',d=>'cp'+(DATA[n2a[+d.id]]?'':' nd'))
+      .attr('d',pathFn)
+      .attr('fill',d=>{const iso=n2a[+d.id];return iso&&DATA[iso]?makeColor(DATA[iso][activeQ]):'#e8e8e8'})
+      .on('mouseenter',(e,d)=>{const iso=n2a[+d.id];if(iso&&DATA[iso])showTip(e,iso)})
+      .on('mousemove',moveT).on('mouseleave',hideT);
+    svg.append('path')
+      .datum(topojson.mesh(world,world.objects.countries,(a,b)=>a!==b))
+      .attr('d',pathFn).attr('fill','none').attr('stroke','#fff').attr('stroke-width',.5);
+    renderDesc(); renderRank();
+  });
+
+function switchQ(q){
+  activeQ=q;
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',Q_ORDER[i]===q));
+  if(countryPaths) countryPaths.attr('fill',d=>{const iso=n2a[+d.id];return iso&&DATA[iso]?makeColor(DATA[iso][q]):'#e8e8e8'});
+  renderDesc(); renderRank();
+}
+
+/* TOOLTIP */
+const tipEl=document.getElementById('tip');
+function showTip(e,iso){
+  const d=DATA[iso]; if(!d) return;
+  const cfg=QUESTIONS[activeQ];
+  const z=d[activeQ], raw=d[activeQ+'_raw'];
+  const col=makeColor(z);
+  const sign=z>=0?'+':'';
+  // diverging bar: 50% = zero
+  const pct=((z+1.15)/2.3*100).toFixed(1);
+  const barLeft=z>=0?'50%':pct+'%';
+  const barWidth=Math.abs(z)/2.3*50+'%';
+  let rows='';
+  cfg.other.forEach((oq,i)=>{
+    const ov=d[oq],or=d[oq+'_raw'];
+    if(ov!==null){
+      const s=ov>=0?'+':'';
+      rows+=`<div class="tip-row"><span class="tip-lbl">${cfg.otherLabel[i]}</span><span class="tip-val">${s}${ov.toFixed(3)}</span></div>`;
+    }
+  });
+  tipEl.innerHTML=`
+    <div class="tip-country">${d.name}</div>
+    <div class="tip-section">Selected indicator</div>
+    <div class="tip-row">
+      <span class="tip-lbl">${cfg.short}</span>
+      <span class="tip-val" style="color:${col}">${sign}${z!==null?z.toFixed(3):'—'}</span>
+    </div>
+    <div class="tip-row"><span class="tip-lbl" style="font-size:10px">Raw mean (1–10)</span><span class="tip-val" style="font-size:10px;color:var(--dim)">${raw!==null?raw.toFixed(2):'—'}</span></div>
+    <div class="tip-bar-wrap">
+      <div class="tip-bar-zero"></div>
+      <div class="tip-bar-fill" style="left:${barLeft};width:${barWidth};background:${col}"></div>
+    </div>
+    <div class="tip-section">Other attitudes (z-score)</div>
+    ${rows}
+    <div class="tip-n">n = ${d[activeQ+'_n'].toLocaleString()} valid responses</div>`;
+  tipEl.classList.add('on'); moveT(e);
+}
+function moveT(e){tipEl.style.left=Math.min(e.clientX+16,window.innerWidth-275)+'px';tipEl.style.top=Math.min(e.clientY-10,window.innerHeight-300)+'px'}
+function hideT(){tipEl.classList.remove('on')}
+
+/* RANKING */
+function showR(top){
+  rankTop=top;
+  document.querySelectorAll('.sb-tab').forEach((b,i)=>b.classList.toggle('on',top?i===0:i===1));
+  renderRank();
+}
+function renderRank(){
+  const sorted=Object.entries(DATA).map(([iso,d])=>({iso,name:d.name,val:d[activeQ]}))
+    .filter(d=>d.val!==null).sort((a,b)=>rankTop?b.val-a.val:a.val-b.val).slice(0,10);
+  const s=v=>v>=0?'+':'';
+  document.getElementById('rlist').innerHTML=sorted.map((d,i)=>`
+    <div class="ri" onmouseenter="hlC('${d.iso}')" onmouseleave="uhl()">
+      <span class="rn">${i+1}</span>
+      <span class="rd" style="background:${makeColor(d.val)}"></span>
+      <span class="rm">${d.name}</span>
+      <span class="rv">${s(d.val)}${d.val.toFixed(2)}</span>
+    </div>`).join('');
+}
+function hlC(iso){if(countryPaths) countryPaths.style('opacity',d=>(d&&n2a[+d.id])===iso?1:0.3)}
+function uhl(){if(countryPaths) countryPaths.style('opacity',1)}
+</script>
+</body>
+</html>
