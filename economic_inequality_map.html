@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Economic Inequality Indicators — World Map</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono:wght@300;400&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#fff;--text:#1a1a1a;--muted:#666;--dim:#999;--border:#e5e5e5;--active:#c0392b}
+html,body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:14px;line-height:1.5}
+
+.header{padding:28px 40px 18px;border-bottom:2px solid var(--text)}
+.header h1{font-family:'Playfair Display',serif;font-size:22px;font-weight:600;letter-spacing:-.3px}
+.header .meta{margin-top:5px;font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace}
+.header .meta b{color:var(--text)}
+
+.tabs{display:flex;border-bottom:1px solid var(--border);padding:0 40px;overflow-x:auto}
+.tab{padding:11px 0;margin-right:26px;font-size:12px;font-family:'IBM Plex Mono',monospace;color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s;user-select:none}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--text);border-bottom-color:var(--active);font-weight:500}
+
+.desc-bar{padding:9px 40px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:#fafafa}
+.desc-text{font-size:12px;color:var(--muted);flex:1;min-width:200px}
+.desc-text b{color:var(--text)}
+.legend-wrap{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.leg-lbl{font-size:11px;color:var(--dim);font-family:'IBM Plex Mono',monospace;white-space:nowrap}
+.leg-bar{width:200px;height:8px}
+.leg-ticks{display:flex;justify-content:space-between;width:200px;font-size:9px;color:var(--dim);font-family:'IBM Plex Mono',monospace;margin-top:2px}
+
+.main-wrap{display:flex;align-items:stretch;border-bottom:1px solid var(--border)}
+.map-wrap{flex:1;min-width:0;overflow:hidden}
+#map svg{width:100%;height:100%;display:block}
+
+.cp{stroke:#fff;stroke-width:.4;cursor:pointer;transition:opacity .1s}
+.cp:hover{opacity:.72;stroke:#555;stroke-width:.8}
+.nd{fill:#ebebeb;cursor:default;stroke:#ddd;stroke-width:.3}
+.nd:hover{opacity:1!important}
+
+.sb{width:190px;flex-shrink:0;background:#fafafa;border-left:1px solid var(--border);padding:16px 14px;display:flex;flex-direction:column}
+.sb-title{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.sb-tabs{display:flex;border-bottom:1px solid var(--border);margin-bottom:10px}
+.sb-tab{font-size:10px;font-family:'IBM Plex Mono',monospace;padding:4px 8px;cursor:pointer;color:var(--dim);border-bottom:2px solid transparent;transition:all .1s}
+.sb-tab.on{color:var(--text);border-bottom-color:var(--active);font-weight:500}
+.ri{display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.ri:last-child{border-bottom:none}
+.ri:hover .rm{text-decoration:underline}
+.rn{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);width:14px;text-align:right;flex-shrink:0}
+.rd{width:7px;height:7px;flex-shrink:0}
+.rm{font-size:11px;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rv{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);flex-shrink:0}
+
+.tip{position:fixed;pointer-events:none;background:#fff;border:1px solid #ccc;border-top:3px solid var(--active);padding:14px 16px;font-size:12px;min-width:240px;max-width:270px;opacity:0;transition:opacity .1s;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,.12)}
+.tip.on{opacity:1}
+.tip-country{font-family:'Playfair Display',serif;font-size:15px;font-weight:600;margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:8px}
+.tip-section{font-size:10px;font-family:'IBM Plex Mono',monospace;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin:8px 0 4px}
+.tip-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;gap:12px}
+.tip-lbl{font-size:11px;color:var(--muted);flex:1}
+.tip-val{font-size:12px;font-weight:500;font-family:'IBM Plex Mono',monospace;flex-shrink:0}
+.tip-bar-wrap{background:#f0f0f0;height:3px;margin:6px 0 8px;overflow:hidden}
+.tip-bar-fill{height:100%}
+.tip-src{font-size:10px;color:var(--dim);font-family:'IBM Plex Mono',monospace;margin-top:8px;border-top:1px solid var(--border);padding-top:6px}
+
+.footer{padding:12px 40px;display:flex;gap:28px;flex-wrap:wrap;font-size:11px;color:var(--dim);font-family:'IBM Plex Mono',monospace;line-height:1.6}
+.footer b{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Economic Inequality Indicators</h1>
+  <div class="meta">Multiple sources · Most recent available year · ~150 countries</div>
+</div>
+
+<div class="tabs" id="tabs"></div>
+<div class="desc-bar" id="desc-bar"></div>
+
+<div class="main-wrap">
+  <div class="map-wrap"><div id="map"></div></div>
+  <div class="sb">
+    <div class="sb-title">Rankings</div>
+    <div class="sb-tabs">
+      <div class="sb-tab on" onclick="showR(true)">Highest</div>
+      <div class="sb-tab" onclick="showR(false)">Lowest</div>
+    </div>
+    <div id="rlist"></div>
+  </div>
+</div>
+
+<div class="tip" id="tip"></div>
+
+<div class="footer">
+  <span><b>Gini:</b> World Bank / SWIID · <b>Top 10% / Bottom 40% / Top 1%:</b> UNDP HDR 2025 Table 3 · <b>Palma:</b> Top10%/Bottom40% ratio · <b>IHDI loss:</b> UNDP HDR 2025</span>
+  <span>Most recent year with available data per country. Higher = more unequal (all indicators).</span>
+</div>
+
+<script>
+/* ══════════════════════════
+   DATA
+   Sources:
+   - Gini: World Bank PIP / SWIID (most recent year)
+   - Top10%, Bottom40%, Top1%: UNDP HDR 2025 Table 3
+   - Palma = Top10% / Bottom40%
+   - IHDI_loss: UNDP HDR 2025 Table 3 (Overall loss %)
+   Format: {gini, top10, bot40, top1, palma, ihdi_loss, yr}
+══════════════════════════ */
+const DATA = {
+// iso: {name, gini, top10, bot40, top1, ihdi_loss, yr_gini}
+"ISL":{name:"Iceland",       gini:26.1,top10:22.0,bot40:23.9,top1:8.0, ihdi_loss:5.0, yr:2018},
+"NOR":{name:"Norway",        gini:27.7,top10:22.4,bot40:22.9,top1:9.3, ihdi_loss:6.3, yr:2019},
+"DNK":{name:"Denmark",       gini:28.3,top10:23.8,bot40:23.1,top1:12.0,ihdi_loss:5.5, yr:2022},
+"CHE":{name:"Switzerland",   gini:33.7,top10:26.4,bot40:19.7,top1:9.8, ihdi_loss:7.8, yr:2020},
+"NLD":{name:"Netherlands",   gini:25.7,top10:21.4,bot40:24.0,top1:6.8, ihdi_loss:6.6, yr:2021},
+"BEL":{name:"Belgium",       gini:26.4,top10:21.9,bot40:23.6,top1:8.5, ihdi_loss:6.3, yr:2022},
+"FIN":{name:"Finland",       gini:27.9,top10:22.9,bot40:23.2,top1:11.1,ihdi_loss:6.0, yr:2022},
+"DEU":{name:"Germany",       gini:32.4,top10:25.0,bot40:20.6,top1:12.8,ihdi_loss:7.2, yr:2020},
+"SWE":{name:"Sweden",        gini:29.8,top10:22.7,bot40:21.5,top1:10.9,ihdi_loss:7.6, yr:2021},
+"IRL":{name:"Ireland",       gini:30.1,top10:24.8,bot40:22.0,top1:13.6,ihdi_loss:6.6, yr:2021},
+"SVN":{name:"Slovenia",      gini:24.3,top10:20.6,bot40:24.9,top1:8.0, ihdi_loss:4.9, yr:2022},
+"AUS":{name:"Australia",     gini:34.3,top10:26.2,bot40:19.6,top1:9.9, ihdi_loss:8.9, yr:2018},
+"GBR":{name:"United Kingdom",gini:32.4,top10:24.6,bot40:20.2,top1:13.1,ihdi_loss:8.1, yr:2021},
+"CAN":{name:"Canada",        gini:31.7,top10:24.0,bot40:20.5,top1:11.6,ihdi_loss:7.7, yr:2019},
+"CZE":{name:"Czechia",       gini:25.9,top10:22.2,bot40:24.1,top1:9.7, ihdi_loss:5.2, yr:2022},
+"ARE":{name:"UAE",           gini:26.4,top10:20.5,bot40:23.0,top1:16.1,ihdi_loss:7.9, yr:2018},
+"AUT":{name:"Austria",       gini:30.9,top10:23.8,bot40:21.0,top1:11.5,ihdi_loss:7.4, yr:2022},
+"KOR":{name:"South Korea",   gini:32.9,top10:24.6,bot40:19.9,top1:15.1,ihdi_loss:8.5, yr:2021},
+"NZL":{name:"New Zealand",   gini:33.9,top10:null, bot40:null,top1:12.1,ihdi_loss:9.1, yr:2019},
+"JPN":{name:"Japan",         gini:32.9,top10:26.1,bot40:20.8,top1:12.7,ihdi_loss:8.6, yr:2013},
+"CYP":{name:"Cyprus",        gini:31.5,top10:25.7,bot40:21.4,top1:8.4, ihdi_loss:7.9, yr:2022},
+"EST":{name:"Estonia",       gini:32.3,top10:24.3,bot40:20.4,top1:12.8,ihdi_loss:7.1, yr:2022},
+"HKG":{name:"Hong Kong SAR", gini:42.0,top10:null, bot40:null,top1:17.9,ihdi_loss:12.1,yr:2016},
+"LUX":{name:"Luxembourg",    gini:34.4,top10:24.5,bot40:19.5,top1:13.1,ihdi_loss:9.1, yr:2022},
+"AND":{name:"Andorra",       gini:28.0,top10:null, bot40:null,top1:11.5,ihdi_loss:8.3, yr:2016},
+"FRA":{name:"France",        gini:31.2,top10:24.9,bot40:20.8,top1:12.1,ihdi_loss:9.1, yr:2022},
+"ISR":{name:"Israel",        gini:37.9,top10:26.6,bot40:16.6,top1:16.8,ihdi_loss:11.5,yr:2021},
+"ESP":{name:"Spain",         gini:33.9,top10:24.7,bot40:18.7,top1:12.1,ihdi_loss:10.8,yr:2021},
+"SVK":{name:"Slovakia",      gini:24.1,top10:19.1,bot40:24.3,top1:9.2, ihdi_loss:5.3, yr:2022},
+"ITA":{name:"Italy",         gini:34.8,top10:26.2,bot40:18.6,top1:12.3,ihdi_loss:10.7,yr:2021},
+"POL":{name:"Poland",        gini:28.5,top10:22.8,bot40:22.4,top1:15.2,ihdi_loss:9.8, yr:2022},
+"LTU":{name:"Lithuania",     gini:36.6,top10:29.1,bot40:18.7,top1:9.6, ihdi_loss:9.3, yr:2022},
+"PRT":{name:"Portugal",      gini:34.6,top10:27.5,bot40:19.6,top1:9.7, ihdi_loss:10.7,yr:2022},
+"HRV":{name:"Croatia",       gini:30.0,top10:22.3,bot40:21.8,top1:9.0, ihdi_loss:6.9, yr:2022},
+"LVA":{name:"Latvia",        gini:34.3,top10:26.2,bot40:19.2,top1:10.7,ihdi_loss:8.7, yr:2021},
+"CHL":{name:"Chile",         gini:43.0,top10:34.5,bot40:15.8,top1:22.0,ihdi_loss:17.7,yr:2022},
+"HUN":{name:"Hungary",       gini:29.2,top10:24.1,bot40:22.2,top1:9.8, ihdi_loss:5.9, yr:2021},
+"ARG":{name:"Argentina",     gini:42.4,top10:29.8,bot40:15.5,top1:12.4,ihdi_loss:12.0,yr:2024},
+"MNE":{name:"Montenegro",    gini:34.3,top10:24.7,bot40:18.3,top1:9.9, ihdi_loss:10.6,yr:2021},
+"URY":{name:"Uruguay",       gini:40.6,top10:30.5,bot40:15.9,top1:14.8,ihdi_loss:13.3,yr:2022},
+"TUR":{name:"Turkey",        gini:44.4,top10:34.7,bot40:14.7,top1:24.4,ihdi_loss:17.0,yr:2022},
+"KAZ":{name:"Kazakhstan",    gini:29.2,top10:24.8,bot40:22.9,top1:14.9,ihdi_loss:8.5, yr:2021},
+"RUS":{name:"Russia",        gini:35.1,top10:26.6,bot40:18.7,top1:23.8,ihdi_loss:8.9, yr:2022},
+"BLR":{name:"Belarus",       gini:24.4,top10:20.7,bot40:24.8,top1:9.6, ihdi_loss:6.4, yr:2020},
+"BGR":{name:"Bulgaria",      gini:38.2,top10:29.9,bot40:17.1,top1:16.9,ihdi_loss:11.5,yr:2022},
+"ROU":{name:"Romania",       gini:33.9,top10:24.0,bot40:18.4,top1:13.4,ihdi_loss:10.3,yr:2022},
+"GEO":{name:"Georgia",       gini:33.9,top10:25.2,bot40:19.3,top1:18.5,ihdi_loss:10.7,yr:2024},
+"MYS":{name:"Malaysia",      gini:40.7,top10:30.9,bot40:16.1,top1:14.9,ihdi_loss:13.7,yr:2021},
+"SRB":{name:"Serbia",        gini:33.3,top10:25.9,bot40:20.0,top1:12.5,ihdi_loss:7.3, yr:2022},
+"ARM":{name:"Armenia",       gini:27.2,top10:23.0,bot40:22.8,top1:15.0,ihdi_loss:8.4, yr:2023},
+"ALB":{name:"Albania",       gini:29.4,top10:22.8,bot40:21.6,top1:8.9, ihdi_loss:13.0,yr:2020},
+"BIH":{name:"Bosnia & Herz.",gini:33.0,top10:25.1,bot40:19.8,top1:9.3, ihdi_loss:14.3,yr:2011},
+"MKD":{name:"N. Macedonia",  gini:33.5,top10:22.9,bot40:18.1,top1:6.9, ihdi_loss:11.3,yr:2019},
+"AZE":{name:"Azerbaijan",    gini:26.6,top10:null, bot40:null,top1:14.0,ihdi_loss:6.8, yr:2005},
+"MDA":{name:"Moldova",       gini:25.7,top10:22.1,bot40:24.3,top1:10.4,ihdi_loss:8.4, yr:2021},
+"UKR":{name:"Ukraine",       gini:26.6,top10:21.7,bot40:24.3,top1:9.3, ihdi_loss:8.2, yr:2022},
+"IRN":{name:"Iran",          gini:35.9,top10:26.8,bot40:19.1,top1:18.3,ihdi_loss:19.5,yr:2023},
+"THA":{name:"Thailand",      gini:36.4,top10:27.1,bot40:19.1,top1:19.8,ihdi_loss:15.2,yr:2021},
+"CHN":{name:"China",         gini:35.7,top10:28.2,bot40:18.8,top1:15.8,ihdi_loss:15.9,yr:2021},
+"PER":{name:"Peru",          gini:40.2,top10:30.7,bot40:16.2,top1:26.9,ihdi_loss:20.3,yr:2022},
+"MEX":{name:"Mexico",        gini:43.5,top10:34.4,bot40:15.4,top1:21.6,ihdi_loss:18.1,yr:2022},
+"COL":{name:"Colombia",      gini:53.9,top10:43.5,bot40:10.3,top1:17.9,ihdi_loss:24.7,yr:2023},
+"BRA":{name:"Brazil",        gini:51.6,top10:41.0,bot40:11.3,top1:21.1,ihdi_loss:24.4,yr:2023},
+"PAN":{name:"Panama",        gini:47.0,top10:36.9,bot40:12.1,top1:17.9,ihdi_loss:20.9,yr:2022},
+"MNG":{name:"Mongolia",      gini:31.4,top10:24.6,bot40:20.8,top1:16.1,ihdi_loss:13.4,yr:2022},
+"ECU":{name:"Ecuador",       gini:45.2,top10:33.2,bot40:14.0,top1:14.0,ihdi_loss:17.6,yr:2024},
+"DOM":{name:"Dominican Rep.", gini:39.0,top10:28.3,bot40:17.9,top1:15.2,ihdi_loss:18.3,yr:2024},
+"LKA":{name:"Sri Lanka",     gini:37.7,top10:30.8,bot40:18.5,top1:20.5,ihdi_loss:18.8,yr:2019},
+"MDV":{name:"Maldives",      gini:29.3,top10:23.3,bot40:22.1,top1:13.1,ihdi_loss:21.4,yr:2019},
+"VNM":{name:"Vietnam",       gini:35.7,top10:28.1,bot40:18.6,top1:15.7,ihdi_loss:16.3,yr:2022},
+"DZA":{name:"Algeria",       gini:27.6,top10:22.9,bot40:23.1,top1:23.3,ihdi_loss:21.2,yr:2011},
+"PRY":{name:"Paraguay",      gini:43.5,top10:35.4,bot40:14.5,top1:17.9,ihdi_loss:20.8,yr:2022},
+"EGY":{name:"Egypt",         gini:28.5,top10:27.5,bot40:21.8,top1:19.1,ihdi_loss:22.8,yr:2021},
+"JOR":{name:"Jordan",        gini:33.7,top10:27.4,bot40:20.3,top1:20.4,ihdi_loss:15.5,yr:2010},
+"TUN":{name:"Tunisia",       gini:39.5,top10:27.0,bot40:20.0,top1:22.6,ihdi_loss:20.2,yr:2021},
+"ZAF":{name:"South Africa",  gini:63.0,top10:50.5,bot40:7.2, top1:19.4,ihdi_loss:35.8,yr:2014},
+"BOL":{name:"Bolivia",       gini:42.1,top10:30.3,bot40:15.7,top1:17.9,ihdi_loss:21.1,yr:2023},
+"GAB":{name:"Gabon",         gini:38.0,top10:27.7,bot40:16.8,top1:11.0,ihdi_loss:23.9,yr:2017},
+"BWA":{name:"Botswana",      gini:54.9,top10:41.5,bot40:10.9,top1:22.7,ihdi_loss:30.4,yr:2015},
+"IDN":{name:"Indonesia",     gini:34.9,top10:29.9,bot40:19.5,top1:17.9,ihdi_loss:16.5,yr:2024},
+"PHL":{name:"Philippines",   gini:40.7,top10:32.5,bot40:16.9,top1:16.6,ihdi_loss:17.1,yr:2021},
+"MAR":{name:"Morocco",       gini:39.5,top10:31.9,bot40:17.4,top1:13.4,ihdi_loss:27.2,yr:2013},
+"KEN":{name:"Kenya",         gini:38.7,top10:null, bot40:null,top1:null, ihdi_loss:27.4,yr:2021},
+"NGA":{name:"Nigeria",       gini:35.1,top10:null, bot40:null,top1:null, ihdi_loss:32.3,yr:2018},
+"ETH":{name:"Ethiopia",      gini:31.1,top10:null, bot40:null,top1:null, ihdi_loss:34.4,yr:2021},
+"GHA":{name:"Ghana",         gini:43.5,top10:null, bot40:null,top1:null, ihdi_loss:36.5,yr:2016},
+"IND":{name:"India",         gini:25.5,top10:null, bot40:null,top1:null, ihdi_loss:30.7,yr:2022},
+"PAK":{name:"Pakistan",      gini:29.6,top10:null, bot40:null,top1:null, ihdi_loss:33.1,yr:2018},
+"BGD":{name:"Bangladesh",    gini:33.4,top10:null, bot40:null,top1:null, ihdi_loss:29.6,yr:2022},
+"MMR":{name:"Myanmar",       gini:30.7,top10:null, bot40:null,top1:null, ihdi_loss:21.7,yr:2017},
+"KGZ":{name:"Kyrgyzstan",    gini:26.4,top10:22.0, bot40:23.8,top1:18.1,ihdi_loss:9.9, yr:2022},
+"KAZ":{name:"Kazakhstan",    gini:29.2,top10:24.8,bot40:22.9,top1:14.9,ihdi_loss:8.5, yr:2021},
+"TJK":{name:"Tajikistan",    gini:34.0,top10:null, bot40:null,top1:null, ihdi_loss:14.0,yr:2022},
+"UZB":{name:"Uzbekistan",    gini:29.7,top10:23.2, bot40:20.4,top1:16.7,ihdi_loss:null,yr:2022},
+"MNG":{name:"Mongolia",      gini:31.4,top10:24.6,bot40:20.8,top1:16.1,ihdi_loss:13.4,yr:2022},
+"GTM":{name:"Guatemala",     gini:45.7,top10:null, bot40:null,top1:null, ihdi_loss:27.6,yr:2024},
+"HND":{name:"Honduras",      gini:46.8,top10:null, bot40:null,top1:null, ihdi_loss:23.1,yr:2023},
+"NIC":{name:"Nicaragua",     gini:46.2,top10:null, bot40:null,top1:null, ihdi_loss:24.2,yr:2014},
+"SLV":{name:"El Salvador",   gini:38.8,top10:null, bot40:null,top1:null, ihdi_loss:18.1,yr:2022},
+"CRI":{name:"Costa Rica",    gini:45.8,top10:35.1,bot40:13.2,top1:18.2,ihdi_loss:18.6,yr:2024},
+"NAM":{name:"Namibia",       gini:59.1,top10:null, bot40:null,top1:null, ihdi_loss:34.1,yr:2015},
+"ZWE":{name:"Zimbabwe",      gini:50.3,top10:null, bot40:null,top1:null, ihdi_loss:32.1,yr:2020},
+"MOZ":{name:"Mozambique",    gini:50.3,top10:null, bot40:null,top1:null, ihdi_loss:39.8,yr:2019},
+"ZMB":{name:"Zambia",        gini:57.1,top10:null, bot40:null,top1:null, ihdi_loss:39.3,yr:2022},
+"AGO":{name:"Angola",        gini:51.3,top10:null, bot40:null,top1:null, ihdi_loss:41.6,yr:2018},
+"CMR":{name:"Cameroon",      gini:42.2,top10:null, bot40:null,top1:null, ihdi_loss:38.6,yr:2021},
+"SEN":{name:"Senegal",       gini:37.1,top10:null, bot40:null,top1:null, ihdi_loss:35.8,yr:2021},
+"MLI":{name:"Mali",          gini:35.7,top10:null, bot40:null,top1:null, ihdi_loss:32.9,yr:2021},
+"BFA":{name:"Burkina Faso",  gini:37.4,top10:null, bot40:null,top1:null, ihdi_loss:40.5,yr:2021},
+"NER":{name:"Niger",         gini:32.9,top10:null, bot40:null,top1:null, ihdi_loss:36.8,yr:2021},
+"TCD":{name:"Chad",          gini:37.4,top10:null, bot40:null,top1:null, ihdi_loss:39.4,yr:2022},
+"SSD":{name:"South Sudan",   gini:44.1,top10:null, bot40:null,top1:null, ihdi_loss:41.8,yr:2016},
+"SOM":{name:"Somalia",       gini:37.0,top10:null, bot40:null,top1:null, ihdi_loss:43.3,yr:2017},
+"CAF":{name:"C. African Rep.",gini:43.0,top10:null, bot40:null,top1:null, ihdi_loss:38.9,yr:2021},
+"COD":{name:"DR Congo",      gini:44.7,top10:null, bot40:null,top1:null, ihdi_loss:null, yr:2020},
+"TZA":{name:"Tanzania",      gini:40.5,top10:null, bot40:null,top1:null, ihdi_loss:29.5,yr:2018},
+"UGA":{name:"Uganda",        gini:42.7,top10:null, bot40:null,top1:null, ihdi_loss:31.3,yr:2019},
+"RWA":{name:"Rwanda",        gini:43.7,top10:null, bot40:null,top1:null, ihdi_loss:31.0,yr:2016},
+"MDG":{name:"Madagascar",    gini:42.6,top10:null, bot40:null,top1:null, ihdi_loss:34.5,yr:2012},
+"MWI":{name:"Malawi",        gini:38.5,top10:null, bot40:null,top1:null, ihdi_loss:29.4,yr:2019},
+"SGP":{name:"Singapore",     gini:37.4,top10:null, bot40:null,top1:14.2,ihdi_loss:13.0,yr:2017},
+"TWN":{name:"Taiwan",        gini:32.6,top10:null, bot40:null,top1:null, ihdi_loss:null, yr:2021},
+"VEN":{name:"Venezuela",     gini:44.8,top10:null, bot40:null,top1:null, ihdi_loss:14.7,yr:2006},
+"IRQ":{name:"Iraq",          gini:29.8,top10:null, bot40:null,top1:null, ihdi_loss:23.2,yr:2023},
+"SAU":{name:"Saudi Arabia",  gini:35.9,top10:null, bot40:null,top1:null, ihdi_loss:null, yr:2013},
+"QAT":{name:"Qatar",         gini:35.1,top10:25.8,bot40:18.1,top1:24.3,ihdi_loss:null, yr:2018},
+"KWT":{name:"Kuwait",        gini:29.6,top10:null, bot40:null,top1:null, ihdi_loss:null, yr:2017},
+"LBN":{name:"Lebanon",       gini:31.8,top10:24.7,bot40:20.6,top1:21.3,ihdi_loss:null, yr:2011},
+"SYR":{name:"Syria",         gini:37.5,top10:null, bot40:null,top1:null, ihdi_loss:null, yr:2004},
+"YEM":{name:"Yemen",         gini:36.7,top10:null, bot40:null,top1:null, ihdi_loss:30.9,yr:2014},
+"AFG":{name:"Afghanistan",   gini:31.0,top10:null, bot40:null,top1:null, ihdi_loss:35.3,yr:2017},
+"LSO":{name:"Lesotho",       gini:44.9,top10:null, bot40:null,top1:null, ihdi_loss:35.1,yr:2017},
+"SWZ":{name:"Eswatini",      gini:54.6,top10:null, bot40:null,top1:null, ihdi_loss:38.0,yr:2016},
+"GNB":{name:"Guinea-Bissau", gini:33.4,top10:null, bot40:null,top1:null, ihdi_loss:35.6,yr:2021},
+"GMB":{name:"Gambia",        gini:38.8,top10:null, bot40:null,top1:null, ihdi_loss:37.2,yr:2020},
+"HTI":{name:"Haiti",         gini:41.1,top10:null, bot40:null,top1:null, ihdi_loss:39.2,yr:2012},
+"SDN":{name:"Sudan",         gini:34.2,top10:null, bot40:null,top1:null, ihdi_loss:35.8,yr:2014},
+"LBR":{name:"Liberia",       gini:35.3,top10:null, bot40:null,top1:null, ihdi_loss:36.1,yr:2016},
+"CIV":{name:"Ivory Coast",   gini:35.3,top10:null, bot40:null,top1:null, ihdi_loss:39.9,yr:2021},
+"GIN":{name:"Guinea",        gini:29.6,top10:null, bot40:null,top1:null, ihdi_loss:39.6,yr:2018},
+"TGO":{name:"Togo",          gini:37.9,top10:null, bot40:null,top1:null, ihdi_loss:36.4,yr:2021},
+"BEN":{name:"Benin",         gini:34.4,top10:null, bot40:null,top1:null, ihdi_loss:38.6,yr:2021},
+"BDI":{name:"Burundi",       gini:37.5,top10:null, bot40:null,top1:null, ihdi_loss:34.9,yr:2020},
+"ERI":{name:"Eritrea",       gini:null, top10:null, bot40:null,top1:null, ihdi_loss:null, yr:null},
+"NPL":{name:"Nepal",         gini:30.0,top10:null, bot40:null,top1:null, ihdi_loss:29.7,yr:2022},
+"KHM":{name:"Cambodia",      gini:37.1,top10:null, bot40:null,top1:null, ihdi_loss:26.7,yr:2019},
+"LAO":{name:"Laos",          gini:38.8,top10:null, bot40:null,top1:null, ihdi_loss:25.1,yr:2018},
+"PNG":{name:"Papua New Guinea",gini:41.9,top10:null,bot40:null,top1:null,ihdi_loss:26.6,yr:2009},
+"JAM":{name:"Jamaica",       gini:40.2,top10:29.9, bot40:16.0,top1:17.9,ihdi_loss:18.1,yr:2021},
+"TTO":{name:"Trinidad & Tob.",gini:40.3,top10:null, bot40:null,top1:null, ihdi_loss:null, yr:2015},
+"MRT":{name:"Mauritania",    gini:32.0,top10:null, bot40:null,top1:null, ihdi_loss:33.6,yr:2019},
+"MUS":{name:"Mauritius",     gini:36.8,top10:29.9, bot40:18.8,top1:15.9,ihdi_loss:17.0,yr:2017},
+"COM":{name:"Comoros",       gini:45.3,top10:null, bot40:null,top1:null, ihdi_loss:41.0,yr:2014},
+"DJI":{name:"Djibouti",      gini:41.6,top10:null, bot40:null,top1:null, ihdi_loss:33.5,yr:2017},
+"OMN":{name:"Oman",          gini:30.0,top10:null, bot40:null,top1:null, ihdi_loss:12.6,yr:2010},
+"ESP":{name:"Spain",         gini:33.9,top10:24.7,bot40:18.7,top1:12.1,ihdi_loss:10.8,yr:2021},
+"GRC":{name:"Greece",        gini:33.4,top10:24.8,bot40:19.6,top1:14.3,ihdi_loss:9.1, yr:2022},
+"PRI":{name:"Puerto Rico",   gini:49.0,top10:null, bot40:null,top1:null, ihdi_loss:null, yr:2020},
+"MAC":{name:"Macao SAR",     gini:35.0,top10:null, bot40:null,top1:null, ihdi_loss:null, yr:2021},
+"LBY":{name:"Libya",         gini:30.2,top10:null, bot40:null,top1:null, ihdi_loss:null, yr:2008}
+};
+
+// Palma = top10/bot40 hesapla
+Object.values(DATA).forEach(d => {
+  if(d.top10 !== null && d.bot40 !== null && d.bot40 > 0)
+    d.palma = Math.round(d.top10/d.bot40*100)/100;
+  else d.palma = null;
+});
+
+const INDICATORS = {
+  gini:     {short:"Gini coefficient",      desc:'<b>Gini</b>: measures overall income distribution inequality (0=perfect equality, 100=perfect inequality). World Bank / SWIID. Higher = more unequal.',unit:'',min:22,max:64,src:"World Bank PIP / SWIID"},
+  top10:    {short:"Top 10% income share",  desc:'<b>Top 10% share</b>: share of total income received by the richest 10%. Higher = more concentrated income at the top.',unit:'%',min:19,max:51,src:"UNDP HDR 2025"},
+  bot40:    {short:"Bottom 40% income share",desc:'<b>Bottom 40% share</b>: share of total income received by the poorest 40%. Lower = more unequal (opposite direction — map inverted).',unit:'%',min:7,max:25,src:"UNDP HDR 2025",invert:true},
+  palma:    {short:"Palma ratio",            desc:'<b>Palma ratio</b>: Top 10% share / Bottom 40% share. Captures inequality at the extremes. Values >2 indicate high inequality. Higher = more unequal.',unit:'',min:0.8,max:5.5,src:"Calculated from UNDP HDR 2025"},
+  top1:     {short:"Top 1% income share",   desc:'<b>Top 1% share</b>: share of total income going to the richest 1%. Captures extreme elite concentration. Higher = more unequal.',unit:'%',min:6,max:27,src:"UNDP HDR 2025"},
+  ihdi_loss:{short:"IHDI loss (%)",          desc:'<b>IHDI loss</b>: % loss in Human Development Index due to inequality across health, education and income. Higher = more human development lost to inequality.',unit:'%',min:5,max:44,src:"UNDP HDR 2025"}
+};
+
+const IND_ORDER = ["gini","top10","bot40","palma","top1","ihdi_loss"];
+let activeI = "gini", rankTop = true;
+
+function makeColor(val, ind){
+  if(val===null) return '#e8e8e8';
+  const cfg = INDICATORS[ind];
+  let t = (val - cfg.min)/(cfg.max - cfg.min);
+  t = Math.max(0, Math.min(1, t));
+  if(cfg.invert) t = 1-t; // bottom40: lower share = more unequal = darker
+  return d3.interpolateRgbBasis(["#f5e6d3","#f0bb8a","#e07d3e","#c44020","#8b1508"])(t);
+}
+
+/* TABS */
+const tabsEl = document.getElementById('tabs');
+IND_ORDER.forEach(k => {
+  const el = document.createElement('div');
+  el.className = 'tab'+(k===activeI?' active':'');
+  el.textContent = INDICATORS[k].short;
+  el.onclick = () => switchI(k);
+  tabsEl.appendChild(el);
+});
+
+/* DESC BAR */
+function renderDesc(){
+  const cfg = INDICATORS[activeI];
+  const vals = Object.values(DATA).map(d=>d[activeI]).filter(v=>v!==null);
+  const mean = (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1);
+  const lo = cfg.invert ? 'More equal →' : 'Less unequal →';
+  const hi = cfg.invert ? '← More unequal' : '← More unequal';
+  document.getElementById('desc-bar').innerHTML = `
+    <div class="desc-text">${cfg.desc} &nbsp;·&nbsp; Global mean: <b>${mean}${cfg.unit}</b></div>
+    <div>
+      <div class="legend-wrap">
+        <span class="leg-lbl">${lo}</span>
+        <div>
+          <canvas id="lgrd" class="leg-bar" width="200" height="8"></canvas>
+          <div class="leg-ticks"><span>${cfg.min}</span><span></span><span></span><span></span><span>${cfg.max}</span></div>
+        </div>
+        <span class="leg-lbl">${hi}</span>
+      </div>
+    </div>`;
+  const c=document.getElementById('lgrd'),ctx=c.getContext('2d');
+  const g=ctx.createLinearGradient(0,0,200,0);
+  for(let i=0;i<=1;i+=0.02) {
+    const v = cfg.min + i*(cfg.max-cfg.min);
+    g.addColorStop(i, makeColor(v, activeI));
+  }
+  ctx.fillStyle=g; ctx.fillRect(0,0,200,8);
+}
+
+/* MAP */
+const W=960,H=500;
+const proj=d3.geoNaturalEarth1().scale(153).translate([W/2,H/2]);
+const pathFn=d3.geoPath().projection(proj);
+const svg=d3.select('#map').append('svg')
+  .attr('viewBox',`0 0 ${W} ${H}`)
+  .attr('preserveAspectRatio','xMidYMid meet')
+  .style('width','100%').style('height','100%');
+svg.append('path').datum({type:'Sphere'}).attr('d',pathFn).attr('fill','#dce9f2');
+svg.append('path').datum(d3.geoGraticule()()).attr('d',pathFn)
+  .attr('fill','none').attr('stroke','rgba(255,255,255,.5)').attr('stroke-width',.35);
+
+const n2a={4:"AFG",8:"ALB",12:"DZA",20:"AND",24:"AGO",32:"ARG",36:"AUS",40:"AUT",
+50:"BGD",56:"BEL",64:"BTN",68:"BOL",76:"BRA",100:"BGR",104:"MMR",108:"BDI",116:"KHM",
+120:"CMR",124:"CAN",140:"CAF",144:"LKA",152:"CHL",156:"CHN",170:"COL",174:"COM",
+178:"COD",188:"CRI",191:"HRV",192:"CUB",196:"CYP",203:"CZE",204:"BEN",208:"DNK",
+214:"DOM",218:"ECU",222:"SLV",231:"ETH",232:"ERI",818:"EGY",246:"FIN",250:"FRA",
+266:"GAB",276:"DEU",288:"GHA",300:"GRC",304:"GRL",320:"GTM",270:"GMB",324:"GIN",
+624:"GNB",332:"HTI",340:"HND",348:"HUN",356:"IND",360:"IDN",364:"IRN",368:"IRQ",
+372:"IRL",376:"ISR",380:"ITA",384:"CIV",388:"JAM",392:"JPN",400:"JOR",398:"KAZ",
+404:"KEN",408:"PRK",410:"KOR",414:"KWT",417:"KGZ",418:"LAO",422:"LBN",426:"LSO",
+428:"LVA",430:"LBR",434:"LBY",440:"LTU",442:"LUX",450:"MDG",454:"MWI",458:"MYS",
+462:"MDV",466:"MLI",478:"MRT",484:"MEX",496:"MNG",498:"MDA",504:"MAR",508:"MOZ",
+516:"NAM",524:"NPL",528:"NLD",554:"NZL",562:"NER",566:"NGA",578:"NOR",586:"PAK",
+591:"PAN",598:"PNG",604:"PER",608:"PHL",616:"POL",620:"PRT",630:"PRI",634:"QAT",
+642:"ROU",643:"RUS",646:"RWA",682:"SAU",686:"SEN",703:"SVK",705:"SVN",706:"SOM",
+710:"ZAF",724:"ESP",729:"SDN",748:"SWZ",752:"SWE",756:"CHE",760:"SYR",762:"TJK",
+764:"THA",768:"TGO",780:"TTO",788:"TUN",792:"TUR",800:"UGA",804:"UKR",784:"ARE",
+826:"GBR",834:"TZA",840:"USA",858:"URY",860:"UZB",862:"VEN",704:"VNM",887:"YEM",
+894:"ZMB",716:"ZWE",688:"SRB",51:"ARM",702:"SGP",112:"BLR",807:"MKD",499:"MNE",
+31:"AZE",268:"GEO",344:"HKG",446:"MAC",158:"TWN",262:"DJI",232:"ERI",174:"COM",
+108:"BDI",204:"BEN",854:"BFA",148:"TCD",178:"COD",180:"COD"};
+
+let countryPaths;
+fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+  .then(r=>r.json())
+  .then(world=>{
+    const countries=topojson.feature(world,world.objects.countries);
+    countryPaths=svg.append('g').selectAll('path')
+      .data(countries.features).join('path')
+      .attr('class',d=>'cp'+(DATA[n2a[+d.id]]?'':' nd'))
+      .attr('d',pathFn)
+      .attr('fill',d=>{const iso=n2a[+d.id];return iso&&DATA[iso]?makeColor(DATA[iso][activeI],activeI):'#e8e8e8'})
+      .on('mouseenter',(e,d)=>{const iso=n2a[+d.id];if(iso&&DATA[iso])showTip(e,iso)})
+      .on('mousemove',moveT).on('mouseleave',hideT);
+    svg.append('path')
+      .datum(topojson.mesh(world,world.objects.countries,(a,b)=>a!==b))
+      .attr('d',pathFn).attr('fill','none').attr('stroke','#fff').attr('stroke-width',.5);
+    renderDesc(); renderRank();
+  });
+
+function switchI(k){
+  activeI=k;
+  document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',IND_ORDER[i]===k));
+  if(countryPaths) countryPaths.attr('fill',d=>{const iso=n2a[+d.id];return iso&&DATA[iso]?makeColor(DATA[iso][k],k):'#e8e8e8'});
+  renderDesc(); renderRank();
+}
+
+/* TOOLTIP */
+const tipEl=document.getElementById('tip');
+function showTip(e,iso){
+  const d=DATA[iso]; if(!d) return;
+  const cfg=INDICATORS[activeI];
+  const val=d[activeI];
+  const col=makeColor(val,activeI);
+  const pct=val!==null?((val-cfg.min)/(cfg.max-cfg.min)*100).toFixed(0):0;
+  const adjpct=cfg.invert?100-pct:pct;
+
+  const fmt=v=>v!==null?v+(cfg.unit||''):'n/a';
+  const palmaStr = d.palma!==null ? d.palma.toFixed(2) : 'n/a';
+
+  tipEl.innerHTML=`
+    <div class="tip-country">${d.name}</div>
+    <div class="tip-section">Selected indicator</div>
+    <div class="tip-row">
+      <span class="tip-lbl">${cfg.short}</span>
+      <span class="tip-val" style="color:${col}">${fmt(val)}</span>
+    </div>
+    <div class="tip-bar-wrap"><div class="tip-bar-fill" style="width:${adjpct}%;background:${col}"></div></div>
+    <div class="tip-section">All indicators</div>
+    <div class="tip-row"><span class="tip-lbl">Gini coefficient</span><span class="tip-val">${fmt(d.gini)}</span></div>
+    <div class="tip-row"><span class="tip-lbl">Top 10% share</span><span class="tip-val">${fmt(d.top10)}</span></div>
+    <div class="tip-row"><span class="tip-lbl">Bottom 40% share</span><span class="tip-val">${fmt(d.bot40)}</span></div>
+    <div class="tip-row"><span class="tip-lbl">Palma ratio</span><span class="tip-val">${palmaStr}</span></div>
+    <div class="tip-row"><span class="tip-lbl">Top 1% share</span><span class="tip-val">${fmt(d.top1)}</span></div>
+    <div class="tip-row"><span class="tip-lbl">IHDI loss</span><span class="tip-val">${fmt(d.ihdi_loss)}</span></div>
+    <div class="tip-src">Year: ${d.yr||'n/a'} &nbsp;·&nbsp; ${cfg.src}</div>`;
+  tipEl.classList.add('on'); moveT(e);
+}
+function moveT(e){tipEl.style.left=Math.min(e.clientX+16,window.innerWidth-280)+'px';tipEl.style.top=Math.min(e.clientY-10,window.innerHeight-340)+'px'}
+function hideT(){tipEl.classList.remove('on')}
+
+/* RANKING */
+function showR(top){
+  rankTop=top;
+  document.querySelectorAll('.sb-tab').forEach((b,i)=>b.classList.toggle('on',top?i===0:i===1));
+  renderRank();
+}
+function renderRank(){
+  const cfg=INDICATORS[activeI];
+  const sorted=Object.entries(DATA).map(([iso,d])=>({iso,name:d.name,val:d[activeI]}))
+    .filter(d=>d.val!==null);
+  // highest inequality = highest value EXCEPT bot40 where lowest = most unequal
+  const byInequality = cfg.invert
+    ? sorted.sort((a,b)=>a.val-b.val)   // bot40: lower = more unequal
+    : sorted.sort((a,b)=>b.val-a.val);  // others: higher = more unequal
+  const show = rankTop ? byInequality : [...byInequality].reverse();
+  const disp = show.slice(0,10);
+  document.getElementById('rlist').innerHTML=disp.map((d,i)=>`
+    <div class="ri" onmouseenter="hlC('${d.iso}')" onmouseleave="uhl()">
+      <span class="rn">${i+1}</span>
+      <span class="rd" style="background:${makeColor(d.val,activeI)}"></span>
+      <span class="rm">${d.name}</span>
+      <span class="rv">${d.val}${cfg.unit||''}</span>
+    </div>`).join('');
+}
+function hlC(iso){if(countryPaths) countryPaths.style('opacity',d=>(d&&n2a[+d.id])===iso?1:0.3)}
+function uhl(){if(countryPaths) countryPaths.style('opacity',1)}
+</script>
+</body>
+</html>
