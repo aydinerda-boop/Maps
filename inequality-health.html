@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Eşitsizlik Sizi Öldürüyor — Sağlık ve Gelir Dağılımı</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #F9F7F4;
+    --bg2: #F0EDE8;
+    --text: #1C1917;
+    --text2: #57534E;
+    --text3: #A8A29E;
+    --accent: #B5253F;
+    --accent2: #7C1728;
+    --blue: #185FA5;
+    --green: #1D7A55;
+    --border: #E7E2DC;
+    --max: 760px;
+    --chart-max: 820px;
+  }
+
+  body {
+    font-family: 'Lora', Georgia, serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 18px;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* HEADER */
+  .site-header {
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .site-header .series {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 3px 8px;
+    border-radius: 3px;
+  }
+  .site-header .series-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  /* HERO */
+  .hero {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 4rem 2rem 2rem;
+  }
+  .hero-kicker {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+  }
+  .hero h1 {
+    font-family: 'Lora', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--text);
+    margin-bottom: 1.2rem;
+  }
+  .hero-deck {
+    font-size: 1.15rem;
+    color: var(--text2);
+    line-height: 1.7;
+    border-left: 3px solid var(--accent);
+    padding-left: 1.2rem;
+    margin-bottom: 2rem;
+  }
+  .byline {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text3);
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .byline span { display: flex; align-items: center; gap: 5px; }
+
+  /* CONTENT */
+  .content {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  .section { margin: 3.5rem 0; }
+
+  .section-num {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: .5rem;
+  }
+
+  h2 {
+    font-family: 'Lora', serif;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 1.2rem;
+    color: var(--text);
+  }
+
+  h3 {
+    font-family: 'Lora', serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 2rem 0 .6rem;
+    color: var(--text);
+  }
+
+  p { margin-bottom: 1.2rem; }
+
+  .pullquote {
+    font-family: 'Lora', serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    color: var(--accent2);
+    border-top: 2px solid var(--accent);
+    border-bottom: 1px solid var(--border);
+    padding: 1.4rem 0;
+    margin: 2.5rem 0;
+    line-height: 1.55;
+  }
+
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+
+  /* STAT CALLOUT */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  .stat-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    text-align: center;
+  }
+  .stat-box .num {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 300;
+    color: var(--accent);
+    line-height: 1;
+    display: block;
+    margin-bottom: .3rem;
+  }
+  .stat-box .stat-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.5;
+  }
+
+  /* FIGURE */
+  .figure-wrap {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.8rem;
+    margin: 2.5rem -1rem;
+  }
+  .fig-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: .3rem;
+  }
+  .fig-subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    color: var(--text3);
+    margin-bottom: 1.2rem;
+    line-height: 1.5;
+  }
+  .fig-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 1.2rem;
+  }
+  .fig-tab {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    padding: 4px 12px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    cursor: pointer;
+    background: var(--bg);
+    color: var(--text2);
+    transition: all .15s;
+  }
+  .fig-tab.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+  }
+  .chart-container { position: relative; height: 340px; }
+  .fig-note {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 1rem;
+    line-height: 1.6;
+    border-top: 1px solid var(--border);
+    padding-top: .8rem;
+  }
+  .fig-note a { color: var(--blue); text-decoration: none; }
+
+  /* WHITEHALL VISUAL */
+  .whitehall-vis {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 1.8rem;
+    margin: 2.5rem -1rem;
+  }
+  .wh-grade {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .wh-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    width: 175px;
+    flex-shrink: 0;
+  }
+  .wh-bar-wrap {
+    flex: 1;
+    height: 28px;
+    background: var(--bg2);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  .wh-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
+  }
+  .wh-bar span {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+  }
+  .wh-note-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    padding: 0 2px;
+  }
+  .wh-note-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: var(--text3);
+  }
+
+  /* PAPER CARDS */
+  .paper-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 1.2rem;
+  }
+  .paper-meta {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    color: var(--text3);
+    margin-bottom: .4rem;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .paper-journal {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-size: 10px;
+    letter-spacing: .04em;
+    color: var(--text2);
+    font-weight: 500;
+  }
+  .paper-title {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: .6rem;
+    line-height: 1.4;
+  }
+  .paper-finding {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent);
+    background: #FEF2F2;
+    border-radius: 4px;
+    padding: 6px 10px;
+    margin-bottom: .8rem;
+    line-height: 1.5;
+  }
+  .paper-body {
+    font-size: .95rem;
+    color: var(--text2);
+    line-height: 1.75;
+  }
+  .paper-body p { margin-bottom: .6rem; }
+
+  /* REFERENCES */
+  .ref-list { list-style: none; counter-reset: refs; }
+  .ref-list li {
+    counter-increment: refs;
+    padding: .7rem 0 .7rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.65;
+  }
+  .ref-list li::before {
+    content: counter(refs);
+    position: absolute;
+    left: 0;
+    top: .7rem;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    width: 1.8rem;
+    text-align: right;
+  }
+  .ref-list a { color: var(--blue); text-decoration: none; }
+  .ref-title { font-style: italic; }
+
+  /* FOOTER */
+  .article-footer {
+    max-width: var(--max);
+    margin: 4rem auto 3rem;
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text3);
+    line-height: 1.7;
+  }
+
+  /* HIGHLIGHT BOX */
+  .highlight-box {
+    background: #FFF8F0;
+    border: 1px solid #F5C87C;
+    border-left: 4px solid #E8900A;
+    border-radius: 0 8px 8px 0;
+    padding: 1.2rem 1.4rem;
+    margin: 2rem 0;
+  }
+  .highlight-box .hb-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #A16207;
+    margin-bottom: .5rem;
+  }
+  .highlight-box p {
+    font-size: .95rem;
+    color: #78350F;
+    margin: 0;
+    line-height: 1.7;
+  }
+
+  .info-box {
+    background: #EFF6FF;
+    border: 1px solid #BFDBFE;
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    margin: 2rem 0;
+  }
+  .info-box .ib-title {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #1E40AF;
+    margin-bottom: .5rem;
+  }
+  .info-box p {
+    font-size: .95rem;
+    color: #1E3A8A;
+    margin: 0;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 640px) {
+    body { font-size: 16px; }
+    .figure-wrap, .whitehall-vis { margin: 2rem 0; }
+    .wh-label { width: 130px; font-size: 12px; }
+    .chart-container { height: 260px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <span class="series">Eşitsizlik Serileri</span>
+  <span class="series-title">Ekonomik eşitsizliğin görünmeyen maliyetleri</span>
+</header>
+
+<!-- HERO -->
+<article>
+<div class="hero">
+  <div class="hero-kicker">Sağlık &amp; Gelir Dağılımı · Bölüm 1</div>
+  <h1>Eşitsizlik Sizi Öldürüyor</h1>
+  <p class="hero-deck">
+    Zengin bir ülkede yaşamak sizi sağlıklı kılmaz. Eşit bir ülkede yaşamak kılar. Onlarca yıllık bilimsel kanıt, düşündüğünüzden çok daha kışkırtıcı bir gerçeği gösteriyor: ortalama refah düzeyinden bağımsız olarak, gelir uçurumu ne kadar büyükse, insanlar o kadar erken ölüyor.
+  </p>
+  <div class="byline">
+    <span>Bilimsel verilerle hazırlanmıştır</span>
+    <span>Okuma süresi: ~12 dakika</span>
+  </div>
+</div>
+
+<!-- SECTION 1: MOTİVASYON -->
+<div class="content">
+  <div class="section">
+    <div class="section-num">01 — Motivasyon</div>
+    <h2>İki Ülke, Tek Soru</h2>
+
+    <p>Bir düşünce deneyi yapın. Önünüzde iki ülke var. Kişi başına düşen milli gelirleri neredeyse aynı. Sanayileri, iklimi, sigara içme ve obezite oranları benzer. Tek fark şu: birinci ülkede en zengin ile en yoksul arasındaki gelir uçurumu ikincisine kıyasla çok daha dar.</p>
+
+    <p>Hangi ülkede daha uzun yaşarsınız?</p>
+
+    <p>Cevabınız büyük olasılıkla "ikisi de aynı" ya da "bilmiyorum" oldu. Sezgilerimiz bizi yanıltıyor çünkü bu soruyu yanlış çerçevelemeye alışkınız. Sağlık eşitsizliklerini düşündüğümüzde aklımıza hep zengin-yoksul ikilemini getiririz: yoksullar daha az yiyor, daha kötü barınıyor, doktora daha az gidiyor. Doğru. Ama bu hikâyenin sadece yarısı.</p>
+
+    <p>Diğer yarısı, bilim insanlarını elli yıldır şaşırtmaya devam ediyor.</p>
+
+    <div class="pullquote">
+      "Sağlık gradyanı yoksulları hasta edip zenginleri sağlıklı kılmıyor. Herkesi, bütün sosyal basamaklar boyunca, eşit biçimde etkiliyor."
+      <br><small style="font-size:.85rem; font-style:normal; font-weight:400; color: #9B2335; display:block; margin-top:.5rem">— Sir Michael Marmot, Whitehall Çalışmaları</small>
+    </div>
+
+    <p>1967 yılında İngiliz epidemiyolog Geoffrey Rose, Londra'daki devlet memurlarını incelemeye başladı. Katılımcıların tamamı çalışıyordu, hepsi sağlık sigortasına sahipti ve hiçbiri gerçek anlamda yoksul değildi. Rose ve ardından Michael Marmot'un sürdürdüğü bu çalışma — bugün Whitehall Çalışmaları adıyla bilinen proje — sağlık biliminin seyrini değiştirdi. Sonuçlar, ne yazık ki rahatlatıcı değildi.</p>
+
+    <p>Memuriyet hiyerarşisinin en altındakiler, en tepedekilerle kıyaslandığında yaklaşık <strong>üç kat daha yüksek ölüm riskine</strong> sahipti. Yoksulluk muydu? Hayır. İşsizlik mi? Hayır. Sağlık sigortasına erişim mi? Hepsinde eşit. Tek fark sosyal konumlarıydı — ve bu fark, ölüm oranlarına birebir yansıyordu.</p>
+
+    <p>Bu yazı, o soruyu merkeze alıyor: <strong>eşitsizliğin kendisi mi sizi hasta ediyor?</strong> Mutlak yoksulluktan değil, göreceli konumdan mı? Yanıt, son otuz yılın en güçlü ve en kapsamlı kanıtlarına dayanıyor. Ve evet — yanıt net.</p>
+  </div>
+
+  <!-- STAT BOXES -->
+  <div class="stat-row">
+    <div class="stat-box">
+      <span class="num">14.6</span>
+      <span class="stat-label">ABD'de en zengin %1 ile en yoksul %1 arasındaki yaşam beklentisi farkı (yıl, erkekler)</span>
+    </div>
+    <div class="stat-box">
+      <span class="num">3×</span>
+      <span class="stat-label">Whitehall'da en alt derece memurun en üst dereceye kıyasla ölüm riski (tüm çalışanlar sigortalı)</span>
+    </div>
+    <div class="stat-box">
+      <span class="num">35</span>
+      <span class="stat-label">Gini katsayısıyla sağlık göstergeleri arasında istatistiksel ilişki bulan bağımsız çalışma sayısı (2004 meta-analizi)</span>
+    </div>
+  </div>
+
+  <!-- SECTION 2: VERİ / FİGÜR -->
+  <div class="section">
+    <div class="section-num">02 — Veri</div>
+    <h2>Rakamlar Ne Söylüyor?</h2>
+
+    <p>2016 yılında Harvard'dan ekonomist Raj Chetty ve ekibi, ABD tarihinin en büyük sağlık-gelir çalışmasını yayımladı. 1.4 milyar vergi kaydı, 1999–2014 yılları arası, 40 milyonu aşkın kişi. Bulgu basit ve yıkıcıydı:</p>
+
+    <p><strong>En zengin %1 erkekler, en yoksul %1 erkeklerden ortalama 14.6 yıl daha uzun yaşıyor. Kadınlarda bu fark 10.1 yıl.</strong></p>
+
+    <p>Ama işin ilginç kısmı burada başlıyor. Chetty ve ekibi şunu fark etti: düşük gelirli bireylerin sağlık sonuçları, <em>nerede yaşadıklarına</em> göre dramatik biçimde değişiyordu. New York ve San Francisco'nun yoksulları, benzer gelire sahip Tulsa ve Gary yoksullarından çok daha uzun yaşıyordu. Aradaki fark ne doktora erişimdi, ne hava kirliliği, ne sigara. En güçlü belirleyici: o şehrin <strong>gelir eşitsizliği düzeyiydi</strong>.</p>
+
+    <div class="figure-wrap">
+      <div class="fig-title">Şekil 1 — Gelir ve Sağlık</div>
+      <div class="fig-subtitle">Gerçek verilerle iki görünüm: ABD'de gelir yüzdesi ile yaşam beklentisi, ve OECD ülkelerinde eşitsizlik ile ortalama ömür ilişkisi</div>
+      <div class="fig-tabs">
+        <button class="fig-tab active" onclick="showChart(this,0)">ABD: Gelir yüzdesi → yaşam beklentisi</button>
+        <button class="fig-tab" onclick="showChart(this,1)">OECD: Gini → yaşam beklentisi</button>
+      </div>
+      <div class="chart-container">
+        <canvas id="mainChart"></canvas>
+      </div>
+      <div class="fig-note" id="figNote">
+        <strong>Kaynak:</strong> Chetty, R. et al. (2016). "The Association Between Income and Life Expectancy in the United States, 2001–2014." <em>JAMA</em>, 315(16), 1750–1766. Her nokta bir gelir yüzdeliğini temsil eder. Veriler 1.4 milyar ABD vergi kaydından elde edilmiştir. Yaşam beklentisi 40 yaşında hayatta olanlar için hesaplanmıştır.
+      </div>
+    </div>
+
+    <p>Grafiğe dikkatli bakın. Yaşam beklentisindeki artış, gelir basamaklarını çıktıkça durmaksızın devam ediyor. Bu, sadece "yoksullar daha kötü" meselesini değil, <strong>sosyal bir gradyanı</strong> anlatıyor: her gelir dilimi, bir altındakinden daha uzun, bir üstündekinden daha kısa yaşıyor. Devlet memurlarının tamamı işli ve sigortalıyken bile Marmot'un gördüğü buydu.</p>
+
+    <div class="info-box">
+      <div class="ib-title">Neden önemli?</div>
+      <p>Eğer sorun sadece yoksulluk olsaydı, belirli bir gelir eşiğinin üzerinde sağlık farklılıkları kapanırdı. Kapanmıyor. Orta gelirli biri, üst-orta gelirli birinden daha erken ölüyor. Üst-orta gelirli biri, üst gelirli birinden. Bu, mutlak yoksunluğu değil, <strong>göreceli konumu</strong> işaret ediyor — ve göreceli konumu belirleyen en büyük faktörlerden biri gelir dağılımının ne kadar eşitsiz olduğu.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 3: WHITEHALL -->
+  <div class="section">
+    <div class="section-num">03 — Doğa Deneyi</div>
+    <h2>Whitehall: Laboratuvar Olarak Bürokrasi</h2>
+
+    <p>Sağlık araştırmacıları için "doğa deneyleri" nadiren bulunur. 1967'de Londra, böyle bir fırsat sundu: binlerce devlet memurunun takip edildiği, herkesin çalıştığı ve sigortaya erişimde eşit olduğu bir ortam. Yoksulluğu denklemden çıkarın — geriye ne kalıyor?</p>
+
+    <p>Michael Marmot ve ekibinin yanıtı şüpheyle karşılandı: sosyal hiyerarşi. İddia şuydu: Whitehall'daki memurların sağlık sonuçları, maaşlarından çok <em>hiyerarşideki konumlarına</em> göre şekilleniyordu.</p>
+
+    <div class="whitehall-vis">
+      <div class="fig-title">Şekil 2 — Whitehall Gradyanı</div>
+      <div class="fig-subtitle">Londra devlet memurlarında memuriyet derecesine göre göreceli ölüm riski. En üst derece referans alınmıştır (= 1.0). Tüm katılımcılar çalışıyor ve sağlık sigortasına sahip.</div>
+      <div style="margin-top:1.4rem">
+        <div class="wh-grade">
+          <div class="wh-label" style="font-size:13px; font-weight:500">Üst yönetim</div>
+          <div class="wh-bar-wrap">
+            <div class="wh-bar" style="width:28%; background:#1D7A55"><span>1.0×</span></div>
+          </div>
+        </div>
+        <div class="wh-grade">
+          <div class="wh-label" style="font-size:13px">Profesyonel / Uzman</div>
+          <div class="wh-bar-wrap">
+            <div class="wh-bar" style="width:44%; background:#4F9A6E"><span>1.6×</span></div>
+          </div>
+        </div>
+        <div class="wh-grade">
+          <div class="wh-label" style="font-size:13px">Büro / Katipler</div>
+          <div class="wh-bar-wrap">
+            <div class="wh-bar" style="width:62%; background:#BA7517"><span>2.2×</span></div>
+          </div>
+        </div>
+        <div class="wh-grade">
+          <div class="wh-label" style="font-size:13px">Teknik / Destek</div>
+          <div class="wh-bar-wrap">
+            <div class="wh-bar" style="width:81%; background:#D85A30"><span>2.9×</span></div>
+          </div>
+        </div>
+        <div class="wh-note-row">
+          <span class="wh-note-label">Daha düşük ölüm riski</span>
+          <span class="wh-note-label">Daha yüksek ölüm riski →</span>
+        </div>
+      </div>
+      <div class="fig-note" style="margin-top:1rem">
+        <strong>Kaynak:</strong> Marmot, M.G. et al. (1991). "Health inequalities among British civil servants: the Whitehall II study." <em>The Lancet</em>, 337(8754), 1387–1393. Değerler yaşa göre standardize edilmiş ölüm oranlarını yansıtmaktadır.
+      </div>
+    </div>
+
+    <p>Bu bulguyu şöyle düşünün: teknik destek birimindeki bir memur ile üst yönetimdeki biri aynı hastanede, aynı doktora gidiyor. Sigortaları aynı. İkisi de işli. Ama birincisi yaklaşık üç kat daha yüksek ölüm riskiyle yaşıyor. Bu fark neden?</p>
+
+    <p>Marmot'un yanıtı iki kavrama dayanıyor: <strong>iş üzerindeki kontrol</strong> ve <strong>sosyal statü</strong>. Alt kademedeki memurlar, görevlerini ne zaman ve nasıl yapacakları konusunda çok daha az özerkliğe sahip. Bu durum kronik bir stres tepkisine yol açıyor. Uzun vadede bu kronik stres — vücut üzerindeki birikimli yük olan "allostatic load" — kardiyovasküler hastalık, bağışıklık sistemi zayıflaması ve metabolik bozukluklar olarak karşımıza çıkıyor.</p>
+
+    <div class="highlight-box">
+      <div class="hb-title">Kritik nokta</div>
+      <p>Whitehall bulgusu, sağlık eşitsizliklerinin "yoksulluk sorunu" olmadığını kanıtlıyor. Eşitsizliğin sosyal hiyerarşi kanalıyla, fizyolojik mekanizmalar aracılığıyla bütün toplumu etkilediğini gösteriyor. Çözüm, yalnızca alt kesimlerin gelirini artırmak değil — uçurumu daraltmak.</p>
+    </div>
+
+    <p>Peki bu bulgu tek bir ülkeye mi özgü? Ya da bir döneme mi? Hayır. Aynı gradyan, ABD'nin vergi kayıtlarında, Japonya'nın sağlık istatistiklerinde, İskandinav ülkelerinin kohorlarında tekrar tekrar ortaya çıkıyor. Fark eden şey gradyanın eğimi: eşitsiz ülkelerde daha dik, eşit ülkelerde daha yatay.</p>
+  </div>
+
+  <!-- SECTION 4: META-REVIEW -->
+  <div class="section">
+    <div class="section-num">04 — Bilim Ne Diyor?</div>
+    <h2>Temel Araştırmaların İzinde</h2>
+
+    <p>Aşağıda bu alanda dönüm noktası niteliği taşıyan beş çalışmanın bulguları, akademik jargon olmadan özetlenmiştir. Bu çalışmalar birbirini tamamlayan farklı metodolojiler kullanmaktadır: kohort takibi, meta-analiz, doğa deneyleri ve nedensellik testi.</p>
+
+    <!-- PAPER 1 -->
+    <div class="paper-card">
+      <div class="paper-meta">
+        <span class="paper-journal">The Lancet · 1991 / 1997</span>
+        <span>Birleşik Krallık</span>
+      </div>
+      <div class="paper-title">Whitehall II Çalışmaları — Michael Marmot ve ekibi</div>
+      <div class="paper-finding">Ana bulgu: Sosyal hiyerarşi, bütün gelir düzeylerinde sağlık sonuçlarını belirliyor. "Yoksulluk eşiği" yok — gradyan sürekli.</div>
+      <div class="paper-body">
+        <p>Çalışma, 10.308 Londra devlet memurunu 1985–1988 arasında işe alarak 1997'ye kadar takip etti. Katılımcılara düzenli sağlık taramaları, anketler ve fizyolojik testler uygulandı.</p>
+        <p>Yüksek kademedeki memurlar, düşük kademedekilerle kıyaslandığında sadece daha az ölmüyordu — daha az hasta oluyordu, daha az depresyon bildiriyordu ve bilişsel işlevlerini daha geç yitiriyordu. Fark, sigara içimi, obezite veya alkol tüketimi ile açıklanamıyordu. Bu değişkenler kontrol edildiğinde bile gradyan kaybolmadı.</p>
+        <p>Marmot'un önerdiği mekanizma, "psikososyal stres" modeliydi: iş üzerinde az kontrol, düşük sosyal destek ve kronik hiyerarşik baskı — bunların tamamı kortizol gibi stres hormonlarının sürekli yüksek kalmasına yol açıyor ve uzun vadede organları tahrip ediyor.</p>
+      </div>
+    </div>
+
+    <!-- PAPER 2 -->
+    <div class="paper-card">
+      <div class="paper-meta">
+        <span class="paper-journal">JAMA · 2016</span>
+        <span>ABD · 1.4 milyar kayıt</span>
+      </div>
+      <div class="paper-title">Gelir ve Yaşam Beklentisi: 2001–2014 — Raj Chetty ve ekibi</div>
+      <div class="paper-finding">Ana bulgu: En zengin %1 ile en yoksul %1 arasında 14.6 yıllık yaşam beklentisi farkı. Düşük gelirli bireylerin sağlığı, yaşadıkları yerdeki eşitsizlik düzeyiyle güçlü biçimde bağlantılı.</div>
+      <div class="paper-body">
+        <p>Bu çalışma ölçeği ve metodolojisiyle birlikte tektir. Tüm ABD'deki vergi kayıtları Medicare ve Sosyal Güvenlik verileriyle eşleştirilerek 1.4 milyar gözlem analiz edildi. Sonuç: gelir-sağlık ilişkisi, önceki tahminlerden çok daha güçlü.</p>
+        <p>Araştırmacılar şehirler arası farklılıklara odaklandığında dikkat çekici bir örüntü ortaya çıktı. New York'un en yoksul %20'si, Nashville'in en yoksul %20'sinden yaklaşık 4 yıl daha uzun yaşıyordu — mutlak gelir düzeyleri benzer olmasına karşın. Neyin açıkladığını araştırdıklarında en güçlü belirleyici değişkenler arasında şehrin gelir eşitsizlik düzeyi, sosyal sermaye ve kamu harcamaları geldi.</p>
+        <p>Bu bulgu kritik çünkü "zengin şehir, sağlıklı insanlar" tezini çürütüyor. San Francisco ve Detroit arasındaki fark, ortalama servetten çok dağılımın şeklinde yatıyor.</p>
+      </div>
+    </div>
+
+    <!-- PAPER 3 -->
+    <div class="paper-card">
+      <div class="paper-meta">
+        <span class="paper-journal">Social Science &amp; Medicine · 2015</span>
+        <span>Kapsamlı nedensellik incelemesi</span>
+      </div>
+      <div class="paper-title">Gelir Eşitsizliği ve Sağlık: Nedensel Bir İnceleme — Kate Pickett &amp; Richard Wilkinson</div>
+      <div class="paper-finding">Ana bulgu: Otuz yıllık literatür incelemesinde, gelir eşitsizliğinin sağlık üzerindeki etkisi için güçlü nedensel kanıt mevcut — çevresel ve genetik faktörler kontrol edildiğinde bile.</div>
+      <div class="paper-body">
+        <p>Pickett ve Wilkinson, daha önce birlikte yazdıkları ve büyük ses getiren <em>The Spirit Level</em> (2009) kitabının akademik temelini bu makaleyle sağlamlaştırdı. Hedef, "korelasyon nedensellik değildir" eleştirilerini sistematik olarak yanıtlamaktı.</p>
+        <p>İnceleme, nedensellik için dört kanıt türünü aradı: (1) eşitsizlik değiştikçe sağlığın değişip değişmediği (zaman serisi kanıtı), (2) biyolojik mekanizmanın varlığı, (3) gelir, eğitim gibi alternatif açıklamaların kontrol edilmesi, (4) hayvan çalışmalarında hiyerarşi stresinin fizyolojik etkisi. Dört türde de tutarlı kanıt bulundu.</p>
+        <p>Makalenin en çarpıcı bulgusu şu: eşitsizlik sadece alt kesimleri değil, üst kesimleri de etkiliyor. Eşitsiz toplumlardaki üst-orta gelir grubu, eşit toplumlardaki üst-orta gelir grubundan daha kötü sağlık sonuçlarına sahip. Yani eşitsizlik, toplumun tamamını yıpratan bir "sosyal iklim" yaratıyor.</p>
+      </div>
+    </div>
+
+    <!-- PAPER 4 -->
+    <div class="paper-card">
+      <div class="paper-meta">
+        <span class="paper-journal">International Journal of Epidemiology · 2004</span>
+        <span>Meta-analiz · 98 çalışma</span>
+      </div>
+      <div class="paper-title">Gelir Eşitsizliği ve Sağlık: Ne Öğrendik? — Subramanian &amp; Kawachi</div>
+      <div class="paper-finding">Ana bulgu: 98 çalışmanın meta-analizinde %70'i eşitsizlik-sağlık ilişkisini destekliyor; etki büyüklüğü coğrafyadan bağımsız olarak tutarlı.</div>
+      <div class="paper-body">
+        <p>Bu makale, o zamana kadar yapılmış tüm kantitatif çalışmaları derledi ve standart hale getirdi. ABD, Avrupa, Asya ve Latin Amerika'dan 98 çalışma, ülke, eyalet ve kentsel düzeyde analizleri kapsıyordu.</p>
+        <p>Meta-analizin önemli metodolojik katkısı şuydu: gelir eşitsizliğinin etkisi, bireysel gelir kontrol edildiğinde de varlığını koruyordu. Yani bu bir "karıştırma değişkeni" problemi değil. Gini katsayısının sağlık üzerindeki etkisi, bireysel yoksulluktan <em>bağımsız</em> ve istatistiksel olarak anlamlıydı.</p>
+        <p>Araştırmacılar iki temel mekanizma kanalını tanımladı: "neomalthusian" kanal (mutlak gelirin marjinal faydası) ve "psikososyal" kanal (sosyal karşılaştırma, statü stresi, sosyal uyum kaybı). İkinci kanal, orta ve üst gelirlileri de etkiliyor.</p>
+      </div>
+    </div>
+
+    <!-- PAPER 5 -->
+    <div class="paper-card">
+      <div class="paper-meta">
+        <span class="paper-journal">WHO Komisyon Raporu · 2008</span>
+        <span>Küresel politika belgesi</span>
+      </div>
+      <div class="paper-title">Sağlığın Sosyal Belirleyicileri Komisyonu Raporu — Sir Michael Marmot başkanlığında</div>
+      <div class="paper-finding">Ana bulgu: Ülkeler arasındaki sağlık eşitsizliklerinin büyük çoğunluğu, önlenebilir sosyal ve ekonomik koşullardan kaynaklanıyor. En güçlü belirleyici: gelir dağılımının eşitliği.</div>
+      <div class="paper-body">
+        <p>Dünya Sağlık Örgütü'nün bu raporu, yirmi ülkeden yüzlerce araştırmacının katkısıyla hazırlandı. Hedef, neden bazı ülkelerin insanları diğerlerinden onlarca yıl daha uzun yaşadığını anlamaktı — ve cevabı sağlık sistemlerinde değil, toplumsal yapıda aramaktı.</p>
+        <p>Raporun temel mesajı şuydu: "Sosyal adaletsizliğin büyük boyutlarda öldürdüğünü." Bunun yanında şunu da vurguladı: eşitsizliğin sağlık üzerindeki etkisi için artık yeterince kanıt var, politika yapıcıların "daha fazla veri beklemesi" bir lüks değil, ahlaki bir sorumluluktan kaçış.</p>
+        <p>Rapor, Japonya ile ABD karşılaştırmasını çarpıcı bir örnek olarak sundu. Japonya, 1970'lerde ABD'ye kıyasla çok daha düşük bir yaşam beklentisine sahipti. Sonraki on yıllarda eşitsizliği azaltan politikalar izleyerek dünyanın en uzun yaşayan toplumlarından biri haline geldi — kişi başı gelirdeki artışla kıyaslanamayacak kadar hızlı bir iyileşme.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: SONUÇ -->
+  <div class="section">
+    <div class="section-num">05 — Sonuç</div>
+    <h2>Ne Anlama Geliyor?</h2>
+
+    <p>Bu yazıda incelenen çalışmalar, farklı metodolojilerle ve farklı coğrafyalarda aynı gerçeğe ulaşıyor: gelir eşitsizliği, ortalama refah düzeyinden bağımsız olarak, toplumun sağlığını bozuyor. Bu etki sadece yoksulları değil — herkesi etkiliyor.</p>
+
+    <p>Mekanizma artık iyi anlaşılmış durumda. Eşitsizlik, <strong>kronik psikososyal stres</strong> üretiyor. Sosyal hiyerarşi içindeki konumun sürekli farkında olmak — başkalarıyla kıyaslanmak, statü kaybı korkusu taşımak, kontrol eksikliği yaşamak — vücudun stres sistemlerini aşırı çalıştırıyor. Uzun vadede bu, kalp hastalıkları, bağışıklık baskılanması, obezite ve erken ölüm olarak karşımıza çıkıyor.</p>
+
+    <p>Bu bulguların politika açısından önemi büyük. Eğer sorun sadece yoksulluk olsaydı, büyüme yeterliydi. Ama sorun eşitsizliğin kendisiyse — pastanın büyümesi değil, <em>nasıl bölündüğü</em> belirleyici demektir. Japonya ve İskandinav ülkelerinin deneyimi, bu tezin canlı kanıtlarından biri olmaya devam ediyor.</p>
+
+    <div class="pullquote">
+      "Eşitsizliği azaltmak, tıbbi bir müdahale gibi davranır — ama bütün toplumu birden etkiler."
+      <br><small style="font-size:.85rem; font-style:normal; font-weight:400; color: #9B2335; display:block; margin-top:.5rem">— Richard Wilkinson, The Spirit Level</small>
+    </div>
+
+    <p>Bu serinin sonraki yazılarında eşitsizliğin eğitim, suç, psikoloji ve demokratik temsil üzerindeki etkilerini benzer bir çerçevede ele alacağız. Ortak tema şu olacak: eşitsizliğin maliyeti, görünenden çok daha büyük ve çok daha yaygın.</p>
+  </div>
+
+  <!-- KAYNAKÇA -->
+  <div class="section">
+    <div class="section-num">06 — Kaynakça</div>
+    <h2>Kaynaklar</h2>
+    <ol class="ref-list">
+      <li>
+        Marmot, M.G., Smith, G.D., Stansfeld, S., Patel, C., North, F., Head, J., White, I., Brunner, E., &amp; Feeney, A. (1991).
+        <span class="ref-title">Health inequalities among British civil servants: the Whitehall II study.</span>
+        <em>The Lancet</em>, 337(8754), 1387–1393.
+      </li>
+      <li>
+        Marmot, M.G., Bosma, H., Hemingway, H., Brunner, E., &amp; Stansfeld, S. (1997).
+        <span class="ref-title">Contribution of job control and other risk factors to social variations in coronary heart disease incidence.</span>
+        <em>The Lancet</em>, 350(9073), 235–239.
+      </li>
+      <li>
+        Chetty, R., Stepner, M., Abraham, S., Lin, S., Scuderi, B., Turner, N., Bergeron, A., &amp; Cutler, D. (2016).
+        <span class="ref-title">The Association Between Income and Life Expectancy in the United States, 2001–2014.</span>
+        <em>JAMA</em>, 315(16), 1750–1766.
+      </li>
+      <li>
+        Pickett, K.E., &amp; Wilkinson, R.G. (2015).
+        <span class="ref-title">Income inequality and health: A causal review.</span>
+        <em>Social Science &amp; Medicine</em>, 128, 316–326.
+      </li>
+      <li>
+        Subramanian, S.V., &amp; Kawachi, I. (2004).
+        <span class="ref-title">Income Inequality and Health: What Have We Learned So Far?</span>
+        <em>Epidemiologic Reviews</em>, 26(1), 78–91.
+      </li>
+      <li>
+        Wilkinson, R.G., &amp; Pickett, K.E. (2009).
+        <span class="ref-title">The Spirit Level: Why More Equal Societies Almost Always Do Better.</span>
+        Allen Lane / Penguin Books.
+      </li>
+      <li>
+        Commission on Social Determinants of Health. (2008).
+        <span class="ref-title">Closing the gap in a generation: health equity through action on the social determinants of health. Final Report.</span>
+        World Health Organization (WHO).
+      </li>
+      <li>
+        Leigh, A., &amp; Jencks, C. (2007).
+        <span class="ref-title">Inequality and Mortality: Long-Run Evidence from a Panel of Countries.</span>
+        <em>Journal of Health Economics</em>, 26(1), 1–24.
+      </li>
+      <li>
+        Lynch, J., Smith, G.D., Harper, S., Hillemeier, M., Ross, N., Kaplan, G.A., &amp; Wolfson, M. (2004).
+        <span class="ref-title">Is income inequality a determinant of population health? Part 1. A systematic review.</span>
+        <em>Milbank Quarterly</em>, 82(1), 5–99.
+      </li>
+      <li>
+        McEwen, B.S. (1998).
+        <span class="ref-title">Stress, adaptation, and disease: Allostasis and allostatic load.</span>
+        <em>Annals of the New York Academy of Sciences</em>, 840(1), 33–44.
+        [Allostatic yük kavramının temel kaynağı]
+      </li>
+    </ol>
+  </div>
+</div><!-- /content -->
+</article>
+
+<footer class="article-footer">
+  <p>Bu içerik bilimsel kaynaklara dayanılarak hazırlanmış bilgilendirme amaçlı bir yazıdır. İçerikteki veriler, alıntı yapılan makalelerin orijinal bulgularından elde edilmiştir.</p>
+</footer>
+
+<script>
+var charts = [null, null];
+var currentTab = 0;
+
+// DATASET 1: Chetty et al. (2016) - Income percentile vs life expectancy
+// ABD erkekleri için yaklaşık değerler (40 yaşında hayatta kalanlar için)
+var chettyPercentiles = [1,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,99];
+var chettyMen = [72.7,73.8,74.6,75.3,75.9,76.4,76.9,77.3,77.7,78.1,78.5,78.9,79.3,79.8,80.3,80.9,81.5,82.2,83.1,84.4,87.3];
+var chettyWomen = [78.8,79.5,80.1,80.5,80.9,81.2,81.5,81.8,82.1,82.4,82.7,82.9,83.2,83.5,83.8,84.1,84.5,85.0,85.6,86.5,88.9];
+
+// DATASET 2: OECD countries Gini vs Life Expectancy (~2018–2020)
+var oecdData = [
+  {c:'Norveç',      gini:26.1, le:83.3, gdp:82},
+  {c:'İzlanda',     gini:26.1, le:83.1, gdp:74},
+  {c:'Finlandiya',  gini:27.4, le:81.9, gdp:49},
+  {c:'Danimarka',   gini:28.7, le:81.6, gdp:63},
+  {c:'Belçika',     gini:26.3, le:82.0, gdp:52},
+  {c:'Slovenya',    gini:24.2, le:81.3, gdp:38},
+  {c:'İsveç',       gini:27.6, le:82.8, gdp:54},
+  {c:'Hollanda',    gini:28.2, le:82.3, gdp:58},
+  {c:'Avusturya',   gini:30.5, le:81.8, gdp:55},
+  {c:'Almanya',     gini:31.9, le:81.3, gdp:55},
+  {c:'Fransa',      gini:31.6, le:82.5, gdp:46},
+  {c:'Kanada',      gini:33.3, le:82.3, gdp:49},
+  {c:'Avustralya',  gini:34.4, le:83.4, gdp:51},
+  {c:'Japonya',     gini:33.4, le:84.3, gdp:42},
+  {c:'İspanya',     gini:34.3, le:83.6, gdp:30},
+  {c:'İtalya',      gini:35.4, le:83.6, gdp:35},
+  {c:'İngiltere',   gini:35.1, le:81.4, gdp:46},
+  {c:'Portekiz',    gini:33.5, le:81.3, gdp:23},
+  {c:'ABD',         gini:39.0, le:78.8, gdp:63},
+];
+
+function getTextColor(){
+  var el=document.createElement('div');
+  el.style.color='var(--text)';
+  document.body.appendChild(el);
+  var c=getComputedStyle(el).color;
+  document.body.removeChild(el);
+  return c;
+}
+
+function buildChart1(){
+  var ctx=document.getElementById('mainChart').getContext('2d');
+  var col='rgba(181,37,63,';
+  charts[0]=new Chart(ctx,{
+    type:'line',
+    data:{
+      labels:chettyPercentiles,
+      datasets:[
+        {label:'Erkekler',data:chettyMen,borderColor:'#185FA5',backgroundColor:'rgba(24,95,165,0.08)',pointBackgroundColor:'#185FA5',pointRadius:3,tension:.4,fill:false},
+        {label:'Kadınlar',data:chettyWomen,borderColor:'#B5253F',backgroundColor:'rgba(181,37,63,0.08)',pointBackgroundColor:'#B5253F',pointRadius:3,tension:.4,fill:false}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{labels:{font:{family:'DM Sans, sans-serif',size:12},color:'#57534E',boxWidth:20,padding:16}},
+        tooltip:{callbacks:{
+          title:function(i){return 'Gelir yüzdesi: '+i[0].label+'\'inci'},
+          label:function(i){return i.dataset.label+': '+i.parsed.y.toFixed(1)+' yıl'}
+        }}
+      },
+      scales:{
+        x:{title:{display:true,text:'Gelir yüzdeliği →',font:{family:'DM Sans, sans-serif',size:11},color:'#A8A29E'},ticks:{font:{family:'DM Sans, sans-serif',size:11},color:'#A8A29E'},grid:{color:'rgba(0,0,0,0.05)'}},
+        y:{title:{display:true,text:'Yaşam beklentisi (yıl)',font:{family:'DM Sans, sans-serif',size:11},color:'#A8A29E'},ticks:{font:{family:'DM Sans, sans-serif',size:11},color:'#A8A29E'},grid:{color:'rgba(0,0,0,0.05)'},min:70,max:91}
+      }
+    }
+  });
+}
+
+function buildChart2(){
+  var ctx=document.getElementById('mainChart').getContext('2d');
+  var colors=oecdData.map(function(d){return d.c==='ABD'?'#B5253F':'#185FA5'});
+  var radii=oecdData.map(function(d){return d.c==='ABD'?9:6});
+  charts[1]=new Chart(ctx,{
+    type:'scatter',
+    data:{datasets:[{
+      data:oecdData.map(function(d){return{x:d.gini,y:d.le,label:d.c}}),
+      pointBackgroundColor:colors,
+      pointRadius:radii,
+      pointHoverRadius:9
+    }]},
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{
+          label:function(i){var d=i.raw;return d.label+': Gini='+d.x+', Ömür='+d.y}
+        }}
+      },
+      scales:{
+        x:{title:{display:true,text:'Gini katsayısı (eşitsizlik ölçütü) →',font:{family:'DM Sans, sans-serif',size:11},color:'#A8A29E'},ticks:{font:{family:'DM Sans, sans-serif',size:11},color:'#A8A29E'},grid:{color:'rgba(0,0,0,0.05)'},min:22,max:42},
+        y:{title:{display:true,text:'Ortalama yaşam beklentisi (yıl)',font:{family:'DM Sans, sans-serif',size:11},color:'#A8A29E'},ticks:{font:{family:'DM Sans, sans-serif',size:11},color:'#A8A29E'},grid:{color:'rgba(0,0,0,0.05)'},min:77,max:86}
+      }
+    }
+  });
+}
+
+function showChart(btn, idx){
+  document.querySelectorAll('.fig-tab').forEach(function(b){b.classList.remove('active')});
+  btn.classList.add('active');
+
+  if(charts[currentTab]){charts[currentTab].destroy();charts[currentTab]=null;}
+  currentTab=idx;
+
+  var notes=[
+    '<strong>Kaynak:</strong> Chetty, R. et al. (2016). "The Association Between Income and Life Expectancy in the United States, 2001–2014." <em>JAMA</em>, 315(16). Her nokta bir gelir yüzdeliği; veriler 1.4 milyar ABD vergi kaydından elde edilmiştir. Yaşam beklentisi 40 yaşındaki bireyler için hesaplanmıştır.',
+    '<strong>Kaynak:</strong> OECD Health Statistics (2020); World Bank Gini Index (~2018). Kırmızı nokta: ABD. Mavi noktalar: diğer OECD ülkeleri. Her ülkenin kişi başı geliri $22.000–$85.000 aralığında. Japonya ve İspanya gibi bazı ülkeler görece yüksek Gini\'ye karşın yüksek yaşam beklentisine sahip — bu, başka faktörlerin (diyet, sağlık sistemi) rolüne işaret ediyor. Ancak genel eğilim ve özellikle ABD\'nin konumu dikkat çekici.'
+  ];
+  document.getElementById('figNote').innerHTML=notes[idx];
+
+  if(idx===0) buildChart1(); else buildChart2();
+}
+
+buildChart1();
+</script>
+</body>
+</html>
