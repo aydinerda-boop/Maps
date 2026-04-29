@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aynı Sigorta, Farklı Beden — Türkiye'de Ekonomik Eşitsizliğin Görünmez Sağlık Maliyeti</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Georgia,'Times New Roman',serif}
+body{background:#FBFAF7;color:#1A1A1A;line-height:1.7;font-size:17px}
+.wrap{max-width:760px;margin:0 auto;padding:3rem 1.5rem 5rem}
+header{margin-bottom:3rem;border-bottom:2px solid #1A1A1A;padding-bottom:1.5rem}
+.eyebrow{font-family:-apple-system,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#888;margin-bottom:1rem}
+h1{font-size:38px;line-height:1.1;font-weight:400;margin-bottom:1rem;letter-spacing:-.015em}
+.lede{font-size:19px;line-height:1.5;color:#444;font-style:italic;margin-bottom:1rem}
+.byline{font-family:-apple-system,sans-serif;font-size:12px;color:#888}
+h2{font-size:24px;font-weight:600;margin:3rem 0 1.25rem;letter-spacing:-.01em;line-height:1.25}
+h3{font-size:18px;font-weight:600;margin:2rem 0 .75rem;color:#444}
+p{margin-bottom:1.25rem}
+strong{color:#0A0A0A}
+em{color:#444}
+.pull{font-size:24px;line-height:1.3;font-style:italic;border-left:3px solid #C8593F;padding:1rem 0 1rem 1.25rem;margin:2rem 0;color:#333}
+.fig{margin:2.5rem 0;background:#fff;border:.5px solid #E0DDD3;border-radius:6px;padding:1.5rem}
+.fig-title{font-family:-apple-system,sans-serif;font-size:13px;font-weight:600;letter-spacing:.02em;margin-bottom:.25rem;color:#0A0A0A}
+.fig-sub{font-family:-apple-system,sans-serif;font-size:11px;color:#888;margin-bottom:1rem;line-height:1.5}
+.fig-source{font-family:-apple-system,sans-serif;font-size:10px;color:#999;margin-top:.75rem;font-style:italic}
+.tab-row{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
+.tab{font-family:-apple-system,sans-serif;font-size:11px;padding:5px 10px;border-radius:20px;border:.5px solid #D5D2C9;background:#fff;cursor:pointer;color:#666;font-weight:500}
+.tab:hover{background:#F2F0E9}
+.tab.active{background:#1A1A1A;color:#fff;border-color:#1A1A1A}
+canvas{max-width:100%}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin:1.5rem 0;font-family:-apple-system,sans-serif}
+.stat-grid div{background:#F5F4EE;padding:1rem;border-radius:6px;text-align:center}
+.stat-num{font-size:24px;font-weight:700;color:#C8593F;display:block}
+.stat-lbl{font-size:11px;color:#666;line-height:1.4;display:block;margin-top:.25rem}
+.callout{background:#F5F4EE;border-radius:6px;padding:1.25rem 1.5rem;margin:2rem 0;font-family:-apple-system,sans-serif;font-size:14px;line-height:1.6}
+.callout strong{color:#0A0A0A;display:block;margin-bottom:.5rem;font-size:13px;letter-spacing:.04em;text-transform:uppercase}
+.method{background:#FAF6E8;border-radius:6px;padding:1rem 1.25rem;font-family:-apple-system,sans-serif;font-size:13px;color:#5C4A1F;line-height:1.6;margin:1.5rem 0}
+.method-title{font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.5rem}
+.legend-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:.5rem;font-family:-apple-system,sans-serif;font-size:11px;color:#666}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:3px;vertical-align:middle}
+hr{border:none;border-top:1px solid #E0DDD3;margin:3rem 0}
+.references{font-family:-apple-system,sans-serif;font-size:12px;color:#666;line-height:1.6}
+.references h3{font-family:Georgia,serif;font-size:16px;color:#1A1A1A}
+.paradox{background:#FFF8F4;border-left:4px solid #C8593F;border-radius:0 6px 6px 0;padding:1.25rem 1.5rem;margin:2rem 0;font-family:-apple-system,sans-serif;font-size:14px;line-height:1.65}
+.paradox-title{font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#C8593F;margin-bottom:.5rem}
+@media(max-width:600px){
+  h1{font-size:28px}.lede{font-size:17px}.pull{font-size:18px}
+  .stat-grid{grid-template-columns:1fr}body{font-size:16px}
+  .wrap{padding:2rem 1rem}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Sağlık Ekonomisi · İki Veri Seti, Bir Hikaye</div>
+  <h1>Aynı Sigorta, Farklı Beden</h1>
+  <p class="lede">Türkiye'de herkesin sağlık güvencesi var. Cepten ödenen para gelir gruplarına neredeyse eşit dağılmış. O zaman neden en yoksul kesim, en zenginlerden 2.6 kat daha sık "sağlığım kötü" diyor? Ekonomik eşitsizliğin sigortanın çözmediği yüzü.</p>
+  <div class="byline">İki TÜİK veri seti, 18 yıllık panel · 329.679 birey + 102.973 hane gözlemi · YMA 2003–2020 + HBA 2004–2014</div>
+</header>
+
+<p>Türkiye sağlık politikasının son 20 yılı bir başarı hikâyesi olarak anlatılır. Genel Sağlık Sigortası kapsamı %99'a ulaştı. Sağlıkta Dönüşüm Programı'yla hizmet sunumu büyüdü. Cepten ödemenin toplam sağlık harcamaları içindeki payı düştü. <strong>Bütün bunlar doğru.</strong></p>
+
+<p>Ama bu hikâyede bir boşluk var. TÜİK'in iki ayrı anketinin verilerini yan yana koyduğunuzda — Yaşam Memnuniyeti Anketleri (2003–2020) ve Hanehalkı Bütçe Anketleri (2004–2014) — Türkiye'nin sağlık sisteminin çözdüğü ve çözmediği eşitsizliklerin haritası net çıkıyor.</p>
+
+<p>Sigorta sayesinde para yüküne karşı koruma var. Ama <em>sağlık çıktısına</em> karşı koruma yok.</p>
+
+<div class="stat-grid">
+  <div><span class="stat-num">2.6×</span><span class="stat-lbl">En yoksul, en zenginden 2.6 kat daha sık "kötü sağlık" raporluyor (YMA 2003-2020)</span></div>
+  <div><span class="stat-num">~%4.5</span><span class="stat-lbl">Felaket sağlık harcaması, gelir gruplarında neredeyse eşit (HBA 2004-2014)</span></div>
+  <div><span class="stat-num">3.5×</span><span class="stat-lbl">En zengin grup en yoksuldan 3.5 kat fazla TL sağlığa harcıyor (HBA 2014)</span></div>
+</div>
+
+<h2>1. Önce büyük çelişki: para korunuyor, beden korunmuyor</h2>
+
+<p>Hanehalkı Bütçe Anketi sayesinde her hanenin yıllık sağlık harcamasını ve toplam tüketim bütçesini biliyoruz. <strong>Felaket sağlık harcaması</strong> uluslararası tanımı şöyle: bir hanenin sağlığa ayırdığı para, toplam tüketiminin %10'unu geçiyorsa o hane yıkıcı bir mali yük altında.</p>
+
+<p>11 yıllık veride (2004-2014, 102.973 hane), bu oranı gelir gruplarına göre dağıttığımızda şaşırtıcı bir tablo çıkıyor:</p>
+
+<div class="fig">
+  <div class="fig-title">Şekil 1 · Felaket sağlık harcaması, gelir grubuna göre</div>
+  <div class="fig-sub">Sağlığa toplam tüketim bütçesinin %10'undan fazlasını ayıran hanelerin oranı. 11 yıllık ortalama (2004-2014).</div>
+  <div style="position:relative;height:240px"><canvas id="fig1"></canvas></div>
+  <div class="fig-source">Kaynak: TÜİK Hanehalkı Bütçe Anketleri 2004-2014, n=102.973 hane.</div>
+</div>
+
+<p>Gradyan yok. Daha doğrusu, çok hafif bir <em>tersine</em> gradyan var — en zengin grup en yoksul gruptan biraz daha sık felaket harcamayla karşılaşıyor (%4.71 vs %4.51). Bu, sigortanın rolünü görmenin en net yolu: <strong>SGK'nın 2003-2008 dönüşümü ve 2012 GSS geçişi cebinizden çıkacak parayı gerçekten dengelemiş.</strong></p>
+
+<div class="paradox">
+  <div class="paradox-title">Paradoks ya da gizli mesaj?</div>
+  Yoksullar daha az felaket harcama yaşıyor olabilir, çünkü gerekli bakımı zaten almıyorlar (<em>foregone care</em>). Veya zenginler daha pahalı bakım aldığı için bütçenin %10'unu geçmek onlar için daha kolay. İki açıklama da gerçeklik içeriyor — ve ikisi birden, bir sonraki bulguyu açıklıyor.
+</div>
+
+<h2>2. Para korunuyor — ama bedeni nasıl?</h2>
+
+<p>Şimdi ikinci veri setine geçelim. Yaşam Memnuniyeti Anketi 18 yıl boyunca her yıl tekrarlandı, 329 binlik birikmiş örneklemde her katılımcıya soruluyor: "Sağlığınızdan ne kadar memnunsunuz?"</p>
+
+<p>Cevapları gelir gruplarına göre dağıttığımızda HBA'nın tam tersi bir tablo çıkıyor:</p>
+
+<div class="fig">
+  <div class="fig-title">Şekil 2 · Kötü sağlık raporlama oranı, gelir grubuna göre</div>
+  <div class="fig-sub">"Memnun değilim" + "hiç memnun değilim" diyenlerin oranı. 18 yıllık ortalama (2003-2020).</div>
+  <div style="position:relative;height:280px"><canvas id="fig2"></canvas></div>
+  <div class="fig-source">Kaynak: TÜİK YMA 2003-2020, n=329.679. Yazarın hesaplamaları.</div>
+</div>
+
+<p>Net bir gradyan var. En düşük gelir grubunda her beş kişiden biri (%21.6) sağlığını "kötü" olarak değerlendiriyor. En yüksek gelir grubunda her on iki kişiden bir (%8.3). <strong>2.6 kat fark</strong> — ve bu fark gelir basamaklarının her birinde düzenli olarak küçülüyor, yani tesadüfi değil, sistematik.</p>
+
+<p>Mutsuzluk, yaşam memnuniyetsizliği için de aynı gradyan: %15.8'den %5.9'a, 2.7 kat fark.</p>
+
+<p>İki veri seti birlikte şunu söylüyor: <strong>SGK cebinizdeki parayı koruyor, ama bedeninizi korumuyor.</strong> Yoksul olduğunuzda mali olarak yıkılmıyorsunuz, ama hasta oluyorsunuz.</p>
+
+<div class="pull">SGK cebinizdeki parayı koruyor, ama bedeninizi korumuyor. Yoksul olduğunuzda mali olarak yıkılmıyorsunuz, ama hasta oluyorsunuz.</div>
+
+<h2>3. Bedenin bilmediği şeyi cüzdan biliyor</h2>
+
+<p>Sübjektif soruların yanıltıcı olabileceğini düşünebilirsiniz. Belki yoksullar şikâyet etmeye daha yatkın? 2003 anketi bu şüpheyi yıkacak ek sorular içeriyor: <strong>somatik mental sağlık semptomları</strong>. Yorgunluk, üzüntü, sürekli endişe, ani titremeler, korkutucu düşünceler. Bunlar değerlendirme değil, hissedilen şeyler. Maalesef bu sorular sonraki yıllarda anketten çıkarılmış.</p>
+
+<div class="fig">
+  <div class="fig-title">Şekil 3 · Mental sağlık semptomları, gelir grubuna göre (2003)</div>
+  <div class="fig-sub">"Geçtiğimiz aylarda sık sık [...] hissettiniz mi?" — evet diyenlerin oranı.</div>
+  <div style="position:relative;height:300px"><canvas id="fig3"></canvas></div>
+  <div class="legend-row">
+    <span><span class="dot" style="background:#C8593F"></span>Yorgunluk</span>
+    <span><span class="dot" style="background:#A6552B"></span>Üzüntü</span>
+    <span><span class="dot" style="background:#5C7A8E"></span>Endişe</span>
+    <span><span class="dot" style="background:#7B6BA8"></span>Korku</span>
+    <span><span class="dot" style="background:#888780"></span>Ani titreme</span>
+  </div>
+  <div class="fig-source">Kaynak: TÜİK YMA 2003, S121-S125. n=5.273.</div>
+</div>
+
+<p>"Sık sık titrer misiniz" — somatik anksiyetenin klasik bir göstergesi. En yoksul grupta her sekiz kişiden biri (%13.2) bu deneyimi yaşıyor; en zengin grupta 40 kişiden bir (%2.5). <strong>5 kat fark.</strong></p>
+
+<p>Yine 2003'te sorulan başka bir soru: "Günlük faaliyetlerinizi yapmanızı engelleyen bir sağlık probleminiz var mı?" En yoksul grupta %22.5; en zengin grupta %3.7. <strong>6 kat fark</strong>. Yoksulluk burada sadece daha kötü hissetme değil, daha az yapabilme.</p>
+
+<h2>4. Asıl mesele para mı, yoksa baskı mı?</h2>
+
+<p>Şimdi enteresan bir noktaya geliyoruz. YMA aynı kişilere iki ayrı soru soruyor: "Hane geliriniz hangi grupta?" ve "<em>Bu gelirle</em> ihtiyaçlarınızı karşılayabiliyor musunuz?" İlki nominal gelir, ikincisi <em>sübjektif ekonomik baskı</em>.</p>
+
+<p>İkisini de aynı regresyon modeline koyduğumuzda — yaş, cinsiyet, medeni durum, yıl sabit etkileri kontrol edildikten sonra — şunu görüyoruz: <strong>sübjektif baskı, nominal gelirden 4 kat güçlü öngörücü</strong>. Üstelik bu bulgu 329 binlik örneklemde p<0.001 düzeyinde anlamlı.</p>
+
+<div class="fig">
+  <div class="fig-title">Şekil 4 · Geçim zorlanması ile sağlık ilişkisi</div>
+  <div class="fig-sub">"Bu gelirle ihtiyaçlarınızı nasıl karşılıyorsunuz?" yanıtlarına göre kötü sağlık ve mutsuzluk oranları.</div>
+  <div style="position:relative;height:280px"><canvas id="fig4"></canvas></div>
+  <div class="legend-row">
+    <span><span class="dot" style="background:#C8593F"></span>Kötü sağlık</span>
+    <span><span class="dot" style="background:#A6552B"></span>Mutsuzluk</span>
+  </div>
+  <div class="fig-source">Kaynak: TÜİK YMA 2003-2020, n=329.677. Geçim zorlanması ölçeği yıllar arası uyumlaştırıldı.</div>
+</div>
+
+<p>"Geçinemiyorum" diyen biri (5. seviye), "kolaylıkla geçiniyorum" diyenden (1. seviye) <strong>4 kat daha sık</strong> kötü sağlık raporluyor (%29.6 vs %7.4). Mutsuzluk için fark daha da büyük: 10 katlık bir fark (%30.7 vs %2.9).</p>
+
+<p>Bu, sosyal epidemiyolojide <em>finansal stres hipotezi</em>nin desteklediği bir bulgu. Cüzdanın kalınlığından çok, ay sonunu getirme kaygısı sağlığı yıpratıyor. Aynı gelirle aynı koşullarda yaşayan iki kişi düşünün — biri "geçiniyorum" diyebiliyor, diğeri "yetmiyor" diye kıvranıyor. İkincisinin bedeni bunu biliyor.</p>
+
+<p>Bu bulgu pratik bir sonuç doğuruyor: <strong>"yoksulluk sınırı"</strong> tek başına yararlı bir kavram değil. Aynı gelirde yaşayan iki haneden birinin sağlığı çok daha kötü olabilir — çünkü ikisi gelirin yetip yetmediği konusunda farklı deneyim yaşıyor (çocuk sayısı, sağlık giderleri, bölgesel hayat pahası, beklentiler).</p>
+
+<h2>5. 18 yılda eşitsizlik kapandı mı?</h2>
+
+<p>Türkiye'nin sağlık göstergeleri 2003-2020 arasında genel olarak iyileşti. Kötü sağlık raporlama oranı 2008'de %16.7'den 2020'de %9.9'a indi. Hizmete erişim genişledi. Ama soru şu: <em>Yoksullarla zenginler arasındaki fark kapandı mı?</em></p>
+
+<div class="fig">
+  <div class="fig-title">Şekil 5 · En yoksul ve en zengin gelir grupları arası sağlık farkı, 18 yıl boyunca</div>
+  <div class="fig-sub">Yıllar arası "kötü sağlık" ve "mutsuzluk" oranı (Q1 vs Q5).</div>
+  <div class="tab-row">
+    <button class="tab active" id="t-poor" onclick="showFig5('poor_health')">Kötü sağlık %</button>
+    <button class="tab" id="t-unhappy" onclick="showFig5('unhappy')">Mutsuz %</button>
+    <button class="tab" id="t-gap" onclick="showFig5('gap')">Q1-Q5 farkı (pp)</button>
+  </div>
+  <div style="position:relative;height:320px"><canvas id="fig5"></canvas></div>
+  <div class="legend-row" id="fig5-legend">
+    <span><span class="dot" style="background:#C8593F"></span>Q1 (en yoksul)</span>
+    <span><span class="dot" style="background:#7B6BA8"></span>Q3 (orta)</span>
+    <span><span class="dot" style="background:#1D9E75"></span>Q5 (en zengin)</span>
+  </div>
+  <div class="fig-source">Kaynak: TÜİK YMA 2003-2020.</div>
+</div>
+
+<p>Cevap kısmen olumlu. Q1-Q5 farkı 2008'de 20 puana çıkmıştı, son yıllarda 11-14 puana indi. Ama <strong>18 yıl boyunca, fark hep iki haneliydi</strong>. Hizmetlere erişim genişlerken yararlar gelir gruplarına eşit dağılmadı — yoksulların sağlık göstergeleri iyileşti ama zenginlerinki de iyileşti, gradyan kapanmadı.</p>
+
+<p>Bu, sağlık politikası literatüründe <em>inverse care law</em> olarak bilinir (Hart, 1971): hizmete erişim açıldıkça paradoksal biçimde zenginler daha çok yararlanır. Bilgi, mobilite, kültürel sermaye, bekleme süresine tahammül kapasitesi — bunların hepsi gelirle artar.</p>
+
+<p><strong>2020'de bir not:</strong> Pandemi yılında genel mutsuzluk %14 ile son on yılın en yükseğinde. Ama gelir gradyanı korundu: en yoksul grupta mutsuzluk %21.6, en zenginde %9.9. Pandemi her kesime aynı dokunmadı.</p>
+
+<h2>6. Peki ne yapmalı?</h2>
+
+<p>İki veri setinin birlikte söylediği şey net: <strong>Türkiye'de sağlık eşitsizliğinin asıl kanalı sigorta veya cepten ödeme değil.</strong> SGK herkese ulaşıyor; cepten ödeme yükü gelir gruplarına neredeyse eşit dağılmış. Buna rağmen sağlık çıktıları çok eşit değil. O halde mesele başka yerde.</p>
+
+<p><strong>Birincisi:</strong> Sağlık eşitsizliği <em>yoksulluk koşullarının kendisinden</em> kaynaklanıyor — sigortadan çıkar gibi muayene odasından çıkmıyor. Kötü beslenme, sağlıksız konut, çevresel kirlilik, kronik stres, fiziksel emek, yetersiz uyku. Bunlar hekim reçetesiyle çözülmüyor. Para transferleri, çocuk yardımları, gıda destekleri, güvenli iş ortamları — bunlar artık sağlık politikası araçları.</p>
+
+<p><strong>İkincisi:</strong> "Yetiyor mu?" sorusu "Geliriniz ne?" sorusundan çok daha bilgilendirici. Türkiye'de sosyal yardım programları gelir bantına bakar — ama aynı gelirde "geçinemiyorum" diyen ile "kolaylıkla geçiniyorum" diyen arasında 4 katlık sağlık farkı var. Subjektif ekonomik baskı ölçütleri (örn. <em>economic strain index</em>) yardım programlarına eklenmeli.</p>
+
+<p><strong>Üçüncüsü:</strong> Mental sağlık birinci basamak sağlık hizmetlerinin parçası olmalı. 2003 verisinde en yoksul grubun yaklaşık yarısı çoklu somatik mental sağlık semptomu yaşıyordu. Bu insanlar başağrısı, mide problemi, halsizlikle muayeneye giden ve "stres" etiketlenip kapıdan çıkarılan insanlar. Mental sağlık hizmetleri çoğunlukla ikinci-üçüncü basamakta, şehir merkezlerinde, ücretli özel kanaldan akıyor. Yoksul mahallelerde mental sağlık erişimi <em>ciddi bir kamu sağlığı önceliği</em>.</p>
+
+<p><strong>Dördüncüsü:</strong> Sağlık sistemi başarısı sadece ortalamayla değil, <em>gradyanla</em> ölçülmeli. Türkiye'nin sağlık göstergeleri ortalamada iyileşti — ama yoksul-zengin farkı kapanmadı. Politika hedefi "kötü sağlık oranını azaltmak" yerine "kötü sağlık oranını <em>düşük gelirlilerde</em> azaltmak" olabilir. Bu, hangi hizmetin nereye yatırılacağını farklı şekillerde belirler.</p>
+
+<hr>
+
+<div class="callout">
+  <strong>Sınırlamalar</strong>
+  Bu analiz iki farklı veri setinde öznel ölçüleri (sağlık memnuniyeti, mental sağlık semptomları) ve bütçe verisini (cepten ödeme, felaket harcama) birleştirir. Anketler kesitsel — aynı kişiler yıllar boyu izlenmiyor, dolayısıyla nedensellik tek başına bu verilerden çıkarılamaz. Mental sağlık bataryası yalnızca 2003 anketinde mevcut. 2003-2004 arasındaki "kötü sağlık" oranındaki sıçrama kısmen örneklem kompozisyon değişikliğinden kaynaklanıyor olabilir. 2013'te TÜİK 196 binlik büyük örneklem topladığı için bu yıl ortalamaları çekiyor; harmonizasyon için 5'li gelir grubu ölçeği kullanıldı. Yine de iki veri setinin paralel hikâyesi (HBA: cepten ödeme dengeli; YMA: sağlık çıktısı eşitsiz) güçlü ve sağlam bir bulgudur.
+</div>
+
+<div class="method">
+  <div class="method-title">Yöntem</div>
+  <strong>İki veri seti.</strong> (1) TÜİK Yaşam Memnuniyeti Anketleri (2003-2020), 18 yıl, n=329.679 birey-yıl. (2) TÜİK Hanehalkı Bütçe Anketleri (2004-2014), 11 yıl, n=102.973 hane-yıl. Sigorta tartışmasının dışında tutulması istendiği için SGK ve sosyal güvence değişkenleri analizden dışlandı. <strong>Tanımlar:</strong> "Kötü sağlık": YMA <em>healthsatisfaction</em>≥4. "Mutsuz": <em>lifesatisfaction</em>≥4. "Felaket sağlık harcaması": HBA'da hane sağlık harcaması/toplam tüketim ≥%10. <strong>Geçim zorlanması</strong> 2003-2006'da H31/H19, 2007-2020'de hane gelirinden memnuniyet (<em>hhincomesatisfaction</em>) ile yakalandı; ölçek yönü uyumlaştırıldı. Tüm regresyon modelleri ağırlıklı OLS, robust standart hatalar, yıl sabit etkileri içerir.
+</div>
+
+<hr>
+
+<div class="references">
+<h3>Kaynaklar ve daha fazla okuma</h3>
+<p>Marmot, M. (2015). <em>The Health Gap: The Challenge of an Unequal World</em>. Bloomsbury.</p>
+<p>Wilkinson, R., & Pickett, K. (2009). <em>The Spirit Level: Why Equality is Better for Everyone</em>.</p>
+<p>Hart, J. T. (1971). "The inverse care law." <em>The Lancet</em>, 297(7696), 405-412.</p>
+<p>Türkiye İstatistik Kurumu, Yaşam Memnuniyeti Anketi mikro veri setleri 2003-2020.</p>
+<p>Türkiye İstatistik Kurumu, Hanehalkı Bütçe Anketi mikro veri setleri 2004-2014.</p>
+<p>Tatar, M. ve diğerleri (2011). "Turkey: Health system review." <em>Health Systems in Transition</em>, 13(6).</p>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const PALETTE={red:'#C8593F',rust:'#A6552B',blue:'#5C7A8E',purple:'#7B6BA8',gray:'#888780',green:'#1D9E75',darkgreen:'#0F6E56',gold:'#B59A4E'};
+
+Chart.defaults.font.family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+Chart.defaults.font.size=11;
+Chart.defaults.color='#666';
+const gc='rgba(0,0,0,.06)';
+
+const incLabels=['Grup 1\n(en yoksul)','Grup 2','Grup 3','Grup 4','Grup 5\n(en zengin)'];
+
+// FIG 1: HBA - FSH by quintile (no gradient)
+new Chart(document.getElementById('fig1'),{
+  type:'bar',
+  data:{labels:incLabels,datasets:[{
+    data:[4.51, 4.34, 4.24, 4.06, 4.71],
+    backgroundColor:['#A6552B','#888780','#888780','#888780','#A6552B'],
+    borderRadius:4,barPercentage:.7
+  }]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'Felaket harcama: '+c.parsed.y.toFixed(2)+'%'}}},
+    scales:{x:{grid:{display:false}},y:{grid:{color:gc},title:{display:true,text:'Felaket sağlık harcaması olan hane (%)'},ticks:{callback:v=>v+'%'},min:0,max:6}}}
+});
+
+// FIG 2: YMA - poor health (clear gradient)
+new Chart(document.getElementById('fig2'),{
+  type:'bar',
+  data:{labels:incLabels,datasets:[{
+    data:[21.56, 15.10, 12.66, 10.68, 8.26],
+    backgroundColor:['#C8593F','#A6552B','#888780','#5C7A8E','#1D9E75'],
+    borderRadius:4,barPercentage:.7
+  }]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'Kötü sağlık: '+c.parsed.y.toFixed(1)+'%'}}},
+    scales:{x:{grid:{display:false}},y:{grid:{color:gc},title:{display:true,text:'Kötü sağlık raporlayanlar (%)'},ticks:{callback:v=>v+'%'}}}}
+});
+
+// FIG 3: 2003 mental health
+new Chart(document.getElementById('fig3'),{
+  type:'line',
+  data:{labels:incLabels,datasets:[
+    {label:'Yorgunluk',data:[48.9,43.9,42.1,30.9,30.0],borderColor:PALETTE.red,backgroundColor:PALETTE.red,pointRadius:5,borderWidth:2.5,tension:.2,fill:false},
+    {label:'Üzüntü',data:[28.7,22.3,15.5,10.2,9.6],borderColor:PALETTE.rust,backgroundColor:PALETTE.rust,pointRadius:5,borderWidth:2.5,tension:.2,fill:false},
+    {label:'Endişe',data:[33.3,31.0,31.3,25.7,15.8],borderColor:PALETTE.blue,backgroundColor:PALETTE.blue,pointRadius:5,borderWidth:2.5,tension:.2,fill:false},
+    {label:'Korku',data:[19.1,17.9,17.3,17.5,12.5],borderColor:PALETTE.purple,backgroundColor:PALETTE.purple,pointRadius:5,borderWidth:2.5,tension:.2,fill:false},
+    {label:'Ani titreme',data:[13.2,11.1,8.8,5.0,2.5],borderColor:PALETTE.gray,backgroundColor:PALETTE.gray,pointRadius:5,borderWidth:2.5,tension:.2,fill:false}
+  ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{mode:'index',callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toFixed(1)+'%'}}},
+    scales:{x:{grid:{display:false}},y:{grid:{color:gc},title:{display:true,text:'Semptom raporlayanlar (%)'},ticks:{callback:v=>v+'%'}}}}
+});
+
+// FIG 4: Strain
+new Chart(document.getElementById('fig4'),{
+  type:'bar',
+  data:{labels:['Çok düşük','Düşük','Orta','Yüksek','Çok yüksek'],
+    datasets:[
+      {label:'Kötü sağlık',data:[7.43,9.37,12.23,22.32,29.57],backgroundColor:PALETTE.red,borderRadius:4},
+      {label:'Mutsuz',data:[2.87,4.25,6.27,18.64,30.74],backgroundColor:PALETTE.rust,borderRadius:4}
+    ]},
+  options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{mode:'index',callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toFixed(1)+'%'}}},
+    scales:{x:{grid:{display:false},title:{display:true,text:'Geçim zorlanması (1=düşük baskı, 5=yüksek baskı)'}},y:{grid:{color:gc},title:{display:true,text:'Oran (%)'},ticks:{callback:v=>v+'%'}}}}
+});
+
+// FIG 5: 18-year time series
+const YEARS=[2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019,2020];
+const Q_DATA={
+  poor_health:{
+    Q1:[14.32,27.55,28.76,26.72,27.36,29.68,25.94,23.45,28.22,24.65,21.28,19.39,21.15,18.47,19.69,19.19,22.01,17.92],
+    Q3:[7.77,16.87,18.07,18.33,15.19,16.20,13.61,12.03,13.26,12.16,12.68,12.38,11.19,10.92,13.27,10.82,11.91,8.26],
+    Q5:[4.58,11.45,10.40,10.42,10.24,9.71,8.58,9.98,8.24,7.63,8.07,7.72,8.81,6.71,7.03,8.17,7.97,5.34]
+  },
+  unhappy:{
+    Q1:[12.50,24.84,23.82,21.33,21.46,26.97,25.62,18.84,19.06,18.39,14.76,16.65,15.64,14.05,15.10,15.45,19.15,21.58],
+    Q3:[5.37,10.98,12.71,11.03,9.26,14.80,10.12,9.22,8.66,8.64,8.26,11.26,9.26,8.81,9.96,11.95,11.91,11.67],
+    Q5:[2.92,7.49,5.59,5.79,4.70,6.95,4.66,5.35,4.63,5.60,4.97,6.16,6.76,7.30,6.23,7.40,7.69,9.89]
+  }
+};
+const GAP_DATA=[9.74,16.10,18.36,16.30,17.12,19.97,17.36,13.47,19.98,17.02,13.21,11.67,12.34,11.76,12.66,11.02,14.04,12.58];
+
+let fig5Chart=null;
+function showFig5(metric){
+  document.querySelectorAll('[id^=t-]').forEach(t=>t.classList.remove('active'));
+  if(metric==='poor_health') document.getElementById('t-poor').classList.add('active');
+  else if(metric==='unhappy') document.getElementById('t-unhappy').classList.add('active');
+  else document.getElementById('t-gap').classList.add('active');
+  if(fig5Chart) fig5Chart.destroy();
+  
+  const legend=document.getElementById('fig5-legend');
+  if(metric==='gap'){
+    legend.innerHTML='<span><span class="dot" style="background:#C8593F"></span>Q1-Q5 farkı (yüzde puan)</span><span style="margin-left:auto;font-size:10px;color:#999">Yüksek = daha eşitsiz</span>';
+    fig5Chart=new Chart(document.getElementById('fig5'),{
+      type:'line',
+      data:{labels:YEARS,datasets:[
+        {label:'Q1-Q5 farkı (pp)',data:GAP_DATA,borderColor:PALETTE.red,backgroundColor:PALETTE.red+'1A',pointRadius:5,borderWidth:2.5,tension:.2,fill:true}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'Fark: '+c.parsed.y.toFixed(1)+' pp'}}},
+        scales:{x:{grid:{display:false}},y:{grid:{color:gc},title:{display:true,text:'Q1-Q5 fark (yüzde puan)'},ticks:{callback:v=>v+'pp'},min:0}}}
+    });
+  } else {
+    legend.innerHTML='<span><span class="dot" style="background:#C8593F"></span>Q1 (en yoksul)</span><span><span class="dot" style="background:#7B6BA8"></span>Q3 (orta)</span><span><span class="dot" style="background:#1D9E75"></span>Q5 (en zengin)</span>';
+    const d=Q_DATA[metric];
+    fig5Chart=new Chart(document.getElementById('fig5'),{
+      type:'line',
+      data:{labels:YEARS,datasets:[
+        {label:'Q1 (en yoksul)',data:d.Q1,borderColor:PALETTE.red,backgroundColor:PALETTE.red+'1A',pointRadius:4,borderWidth:2.5,tension:.2,fill:false},
+        {label:'Q3 (orta)',data:d.Q3,borderColor:PALETTE.purple,pointRadius:3,borderWidth:2,tension:.2,fill:false},
+        {label:'Q5 (en zengin)',data:d.Q5,borderColor:PALETTE.green,pointRadius:4,borderWidth:2.5,tension:.2,fill:false}
+      ]},
+      options:{responsive:true,maintainAspectRatio:false,
+        plugins:{legend:{display:false},tooltip:{mode:'index',callbacks:{label:c=>c.dataset.label+': '+c.parsed.y.toFixed(1)+'%'}}},
+        scales:{x:{grid:{display:false}},y:{grid:{color:gc},title:{display:true,text:metric==='poor_health'?'Kötü sağlık (%)':'Mutsuz (%)'},ticks:{callback:v=>v+'%'},min:0}}}
+    });
+  }
+}
+showFig5('poor_health');
+</script>
+</body>
+</html>
