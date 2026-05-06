@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Economic Inequality and Health — A Body of Causal Evidence</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Georgia,'Times New Roman',serif}
+body{background:#FBFAF7;color:#1A1A1A;line-height:1.7;font-size:17px}
+.wrap{max-width:780px;margin:0 auto;padding:3rem 1.5rem 5rem}
+header{margin-bottom:3rem;border-bottom:2px solid #1A1A1A;padding-bottom:1.5rem}
+.eyebrow{font-family:-apple-system,sans-serif;font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:#888;margin-bottom:1rem}
+h1{font-size:38px;line-height:1.1;font-weight:400;margin-bottom:1rem;letter-spacing:-.015em}
+.lede{font-size:19px;line-height:1.5;color:#444;font-style:italic;margin-bottom:1rem}
+.byline{font-family:-apple-system,sans-serif;font-size:12px;color:#888}
+h2{font-size:22px;font-weight:600;margin:2rem 0 .25rem;letter-spacing:-.01em;line-height:1.3}
+h3{font-size:14px;font-family:-apple-system,sans-serif;color:#888;font-weight:500;margin-bottom:1.5rem;letter-spacing:.02em}
+p{margin-bottom:1.25rem}
+strong{color:#0A0A0A}
+em{color:#444}
+.intro{background:#F5F4EE;border-radius:8px;padding:1.5rem 1.75rem;margin-bottom:2.5rem;font-family:-apple-system,sans-serif;font-size:14px;line-height:1.65}
+.intro h2{font-family:Georgia,serif;font-size:18px;margin-bottom:.75rem;margin-top:0}
+.section-head{margin:3rem 0 1.5rem;padding:1.5rem;border-radius:8px;background:linear-gradient(135deg,#FAF6E8,#F5F4EE)}
+.section-head h2{font-size:24px;margin:0;color:#0A0A0A;line-height:1.3}
+.section-head .section-num{font-family:-apple-system,sans-serif;font-size:11px;font-weight:700;letter-spacing:.12em;color:#888;text-transform:uppercase;margin-bottom:.5rem}
+.section-head p{margin:.6rem 0 0;font-size:14px;color:#444;font-family:-apple-system,sans-serif;line-height:1.6}
+.section-head .question-box{margin-top:.75rem;padding:.75rem 1rem;background:rgba(255,255,255,.5);border-radius:5px;font-style:italic;font-size:14px;color:#3F2520;border-left:3px solid #C8593F}
+.study{background:#fff;border:.5px solid #E0DDD3;border-radius:8px;padding:2rem;margin-bottom:2rem;position:relative}
+.study-num{position:absolute;top:1.25rem;right:1.5rem;font-family:-apple-system,sans-serif;font-size:38px;font-weight:200;color:#E0DDD3;line-height:1}
+.method-tag{display:inline-block;font-family:-apple-system,sans-serif;font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:20px;margin-bottom:.75rem}
+.tag-natural{background:#E8F0EA;color:#1A4720}
+.tag-iv{background:#E8EAF5;color:#1F2D6E}
+.tag-cohort{background:#F5EDE3;color:#5C3D14}
+.tag-bigdata{background:#FAEFE8;color:#7A2914}
+.tag-review{background:#EDE9F0;color:#3D2A4A}
+.tag-mediation{background:#E5F0F0;color:#1A4F4F}
+.tag-mechanism{background:#F5E5EE;color:#6E1F4A}
+.tag-experiment{background:#FFE9D9;color:#7A4514}
+.tag-panel{background:#E8EFF5;color:#1F4869}
+.study .citation{font-family:-apple-system,sans-serif;font-size:12px;color:#888;margin-bottom:1rem;line-height:1.5;font-style:italic}
+.study h2{margin-top:0}
+.study .question{background:#FFF8F4;border-left:3px solid #C8593F;padding:.6rem 1rem;margin:1rem 0;font-style:italic;font-size:15px;color:#3F2520;border-radius:0 4px 4px 0}
+.method-box{background:#F5F4EE;border-radius:6px;padding:.85rem 1.1rem;margin:1rem 0;font-family:-apple-system,sans-serif;font-size:13px;line-height:1.6}
+.method-box strong{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#666;margin-bottom:.4rem}
+.finding{background:#EAF4EE;border-left:3px solid #1D9E75;padding:.85rem 1.1rem;margin:1rem 0;font-family:-apple-system,sans-serif;font-size:13px;line-height:1.65;border-radius:0 4px 4px 0}
+.finding strong{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#1A4720;margin-bottom:.4rem}
+.takeaway{font-style:italic;color:#444;border-top:1px solid #F0EEE7;padding-top:1rem;margin-top:1rem;font-size:15px}
+.policy{background:#F0EAE2;border-left:3px solid #8B5A2B;padding:.85rem 1.1rem;margin:1rem 0;font-family:-apple-system,sans-serif;font-size:13px;line-height:1.65;border-radius:0 4px 4px 0}
+.policy strong{display:block;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#5C3D14;margin-bottom:.4rem}
+.callout{background:#FAF6E8;border-radius:6px;padding:1rem 1.25rem;font-family:-apple-system,sans-serif;font-size:13px;color:#5C4A1F;line-height:1.6;margin:2rem 0}
+.callout strong{color:#0A0A0A;display:block;margin-bottom:.5rem;font-size:12px;letter-spacing:.04em;text-transform:uppercase}
+.toc{background:#F5F4EE;border-radius:6px;padding:1.25rem 1.5rem;margin-bottom:2rem;font-family:-apple-system,sans-serif;font-size:14px}
+.toc-title{font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#666;margin-bottom:.75rem}
+.toc-section-title{font-weight:600;font-size:13px;color:#0A0A0A;margin-top:1rem;margin-bottom:.4rem;padding-bottom:.3rem;border-bottom:1px solid #E0DDD3}
+.toc-section-title:first-of-type{margin-top:.25rem}
+.toc-section-title small{display:block;font-weight:400;color:#666;font-size:11px;margin-top:.2rem;font-style:italic}
+.toc ol{padding-left:1.25rem;margin-bottom:0}
+.toc li{margin-bottom:.4rem;line-height:1.5}
+.toc a{color:#1A1A1A;text-decoration:none;border-bottom:1px solid transparent}
+.toc a:hover{border-bottom-color:#1A1A1A}
+hr{border:none;border-top:1px solid #E0DDD3;margin:3rem 0}
+.glossary{background:#FAFAF7;border:.5px solid #E0DDD3;border-radius:8px;padding:1.5rem;margin-top:2rem;font-family:-apple-system,sans-serif;font-size:13px;line-height:1.65}
+.glossary h3{font-family:Georgia,serif;font-size:18px;color:#1A1A1A;margin-bottom:.75rem}
+.glossary dt{font-weight:600;color:#0A0A0A;margin-top:.75rem;margin-bottom:.2rem}
+.glossary dd{margin-left:0;color:#444;margin-bottom:.5rem}
+.cross-ref{background:#F5F4EE;border-radius:5px;padding:.5rem .8rem;margin:1rem 0;font-family:-apple-system,sans-serif;font-size:12px;color:#666;font-style:italic}
+.cross-ref strong{color:#0A0A0A;font-style:normal}
+.manifesto{background:#1A1A1A;color:#E8E6DF;border-radius:8px;padding:2rem;margin:2.5rem 0;font-family:-apple-system,sans-serif;font-size:15px;line-height:1.7}
+.manifesto strong{color:#fff}
+.manifesto-title{font-family:Georgia,serif;font-size:24px;color:#fff;margin-bottom:1rem;font-weight:400}
+@media(max-width:600px){
+  h1{font-size:28px}.lede{font-size:17px}body{font-size:16px}
+  .wrap{padding:2rem 1rem}
+  .study{padding:1.5rem}
+  .study-num{font-size:30px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Methodology Note · Inequality & Health</div>
+  <h1>Inequality Kills</h1>
+  <p class="lede">Poverty doesn't just make life harder. It shortens it, sickens it, and writes itself into the body of the next generation. This page summarizes 50 years of the strongest causal evidence on how economic inequality damages physical and mental health — beyond anything insurance alone can fix.</p>
+  <div class="byline">22 landmark empirical studies · natural experiments, cohort follow-ups, mediator tests, mechanism studies, behavioral experiments</div>
+</header>
+
+<div class="intro">
+  <h2>The political stakes of a methodological question</h2>
+  <p>Mainstream policy debate often treats health as a private matter — your genes, your choices, your lifestyle. When poor people are sicker, the implicit explanation is that they choose worse: they smoke, they eat junk food, they don't exercise, they don't see the doctor. The remedy, in this view, is education, personal responsibility, perhaps better insurance access.</p>
+  <p>This framing is empirically wrong. The evidence assembled below — drawn from the world's leading economic, medical, and scientific journals — points to a fundamentally different conclusion: <strong>health inequality is a structural product of economic inequality, and it cannot be solved without redistributive policy</strong>. Insurance is necessary but nowhere near sufficient. Personal responsibility frameworks misdiagnose the problem.</p>
+  <p>This page organizes the evidence around three sharp questions, each with major political implications:</p>
+  <ol style="padding-left:1.5rem;margin-bottom:1.25rem">
+    <li><strong>Does inequality itself harm health, beyond income?</strong> If two people have identical incomes but live in societies with different inequality levels, do their health outcomes differ? <em>Yes — and this means redistribution matters even if the poor are made absolutely better off.</em></li>
+    <li><strong>Does universal insurance solve the problem?</strong> Turkey, like most European countries, has near-universal health coverage. Does that close the health gap? <em>No — the channels of harm extend far beyond medical care access.</em></li>
+    <li><strong>Does childhood economic position shape adult health 50 years later?</strong> If a baby's family is poor in 1970, can we still see it in their cardiovascular health in 2020? <em>Yes — and this turns child poverty from a moral concern into an actuarial certainty.</em></li>
+  </ol>
+  <p>Each finding below is grounded in <strong>natural experiments, instrumental variables, lag analyses, mediator tests, or laboratory mechanisms</strong> — not just observational correlation. They constitute, collectively, one of the strongest empirical cases in social science for treating <strong>economic redistribution as health policy</strong>.</p>
+</div>
+
+<div class="toc">
+  <div class="toc-title">Contents</div>
+  <div class="toc-section-title">Part 1 · The Effect of Inequality Independent of Income
+    <small>Why two people with identical incomes have unequal health</small>
+  </div>
+  <ol>
+    <li><a href="#whitehall">Whitehall — civil servants and the social gradient (Marmot, 1991)</a></li>
+    <li><a href="#luttmer">Luttmer — when your neighbor gets richer, you get sicker (2005)</a></li>
+    <li><a href="#eibner">Eibner & Evans — relative deprivation drives smoking and obesity (2005)</a></li>
+    <li><a href="#boyce">Boyce, Brown & Moore — rank, not absolute income, predicts wellbeing (2010)</a></li>
+    <li><a href="#hamilton">Hamilton & Kawachi — the immigrant natural experiment (2013)</a></li>
+    <li><a href="#decelles">DeCelles & Norton — first class triggers air rage (2016)</a></li>
+    <li><a href="#layte">Layte & Whelan — status anxiety wears down the body (2014)</a></li>
+    <li><a href="#daly">Daly et al. — the poor commit suicide more in rich neighborhoods (2013)</a></li>
+    <li><a href="#oishi">Oishi et al. — growth without equality doesn't deliver happiness (2011)</a></li>
+    <li><a href="#eisenberger">Eisenberger — social pain is processed like physical pain (2003)</a></li>
+    <li><a href="#kiecolt">Kiecolt-Glaser — stress slows wound healing (2005)</a></li>
+  </ol>
+  <div class="toc-section-title">Part 2 · The Limits of Universal Insurance
+    <small>Why coverage alone doesn't close the gap</small>
+  </div>
+  <ol start="12">
+    <li><a href="#sullivan">Pennsylvania plant closures — does losing your job kill you? (Sullivan & von Wachter, 2009)</a></li>
+    <li><a href="#marcus">German plant closures — when your spouse loses their job (Marcus, 2013)</a></li>
+    <li><a href="#marmot-bobak">Marmot & Bobak — the post-Soviet transition (2000)</a></li>
+    <li><a href="#kondo">Kondo meta-analysis — 60 million people, one finding (2009)</a></li>
+    <li><a href="#chetty">Chetty — 15 years of life lost, even with Medicare (2016)</a></li>
+    <li><a href="#zheng">Zheng — today's inequality kills you in twelve years (2012)</a></li>
+    <li><a href="#elgar">Elgar — trust matters more than public spending (2010)</a></li>
+    <li><a href="#haushofer">Haushofer & Fehr — poverty cripples decision-making (2014)</a></li>
+  </ol>
+  <div class="toc-section-title">Part 3 · Childhood Economic Conditions → Adult Health
+    <small>How shocks before age five echo in middle-aged bodies</small>
+  </div>
+  <ol start="20">
+    <li><a href="#hoynes">Hoynes, Schanzenbach & Almond — Food Stamps cut metabolic syndrome 50 years later (2016)</a></li>
+    <li><a href="#cherokee">Cherokee Casino — what happens when poor families get a check, twenty-five years on (Costello, 2003)</a></li>
+    <li><a href="#vandenberg">Van den Berg, Lindeboom & Portrait — being born in a recession in the Netherlands (2006)</a></li>
+    <li><a href="#banerjee">Banerjee & Duflo — a beetle in the French vineyards (Phylloxera, 2010)</a></li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<!-- PART 1 -->
+<!-- ============================================================ -->
+<div class="section-head">
+  <div class="section-num">Part 1</div>
+  <h2>The Effect of Inequality Independent of Income</h2>
+  <p>Same income, same wealth, same country — but one person sicker than the other. Why? The studies in this section demonstrate that <em>inequality itself</em> is a distinct causal factor, separate from poverty or low income. The political implication is sharp: <strong>raising the floor is not enough; the ceiling must come down too</strong>. Income redistribution and wealth taxes are not just about fairness — they are public health interventions.</p>
+  <div class="question-box">"If two people earn exactly the same wage, but one lives in a much more unequal society, will their health diverge?"</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="whitehall">
+  <div class="study-num">01</div>
+  <span class="method-tag tag-cohort">Cohort study · 40 years</span>
+  <h2>Whitehall — civil servants and the social gradient</h2>
+  <h3>Marmot et al. · 1978, 1991, ongoing</h3>
+  <p class="citation">Marmot, M.G., Smith, G.D., Stansfeld, S. et al. (1991). "Health inequalities among British civil servants: the Whitehall II study." <em>The Lancet</em>, 337(8754), 1387-1393.</p>
+
+  <p>In 1967, the British government launched a study following 18,000 male civil servants. The expectation reflected the conventional wisdom of the time: senior managers, with their "executive stress," would die of heart attacks; junior clerks, with their easier lives, would survive longer.</p>
+
+  <div class="question">"If stress is at the top, why does death cluster at the bottom?"</div>
+
+  <p>The result inverted everything. <strong>The lowest-grade clerks died from heart disease at three times the rate of the most senior administrators.</strong> Each step down the hierarchy added measurable mortality risk. This was no class-vs-class comparison — these were all civil servants in the same institution, in the same city, with the same NHS coverage, working in the same buildings.</p>
+
+  <p>The political significance cannot be overstated. <strong>Equal access to medical care, equal nutritional standards, equal occupational safety — none of it eliminated the gradient.</strong> What remained was a hierarchy of <em>control</em>: who tells whom what to do, whose work is monitored, whose autonomy is respected. The lower clerks were not poor in any conventional sense, yet their bodies recorded their subordinate position with biological precision.</p>
+
+  <div class="method-box">
+    <strong>Why this study cuts across two of our questions</strong>
+    Whitehall demonstrates both that inequality matters independent of income (Part 1) and that universal insurance does not eliminate health gradients (Part 2). It is the foundational study for both arguments — and remains, fifty years later, the gold standard against which all health-inequality research is measured.
+  </div>
+
+  <div class="finding">
+    <strong>Key finding</strong>
+    Lowest-grade clerks died from heart disease at three times the rate of senior administrators. The gradient was continuous: each step down the hierarchy increased mortality risk. Lack of job control — having no say in your daily work — emerged as the strongest behavioral predictor, more powerful than smoking or diet.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication</strong>
+    If hierarchy itself is pathogenic, then workplace democracy is not a luxury but a public health intervention. Worker codetermination, union strength, autonomous teams, flatter management structures — all the institutional innovations historically associated with the labor movement — turn out, in this light, to be life-extending. Reducing pay ratios within firms is preventive medicine.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="luttmer">
+  <div class="study-num">02</div>
+  <span class="method-tag tag-panel">Panel · reference group</span>
+  <h2>Luttmer — when your neighbor gets richer, you get sicker</h2>
+  <h3>Luttmer · 2005</h3>
+  <p class="citation">Luttmer, E.F.P. (2005). "Neighbors as negatives: Relative earnings and well-being." <em>Quarterly Journal of Economics</em>, 120(3), 963-1002.</p>
+
+  <p>Luttmer's QJE paper is one of the founding works in the relative-income literature. The question is direct: <em>what does my neighbor's salary do to me?</em></p>
+
+  <p>Using panel data from 9,000 US households, Luttmer holds the individual's own income constant and asks how the average income of their neighborhood (PUMA) affects their well-being.</p>
+
+  <div class="question">"My salary hasn't changed. So why am I less happy now that my neighbor got promoted?"</div>
+
+  <div class="finding">
+    <strong>Key findings</strong>
+    A 10% increase in neighbors' average income — with the respondent's own income held constant — produces a significant drop in life satisfaction. The magnitude is roughly <strong>one-third the effect of the respondent's own income loss</strong>. When neighbors get richer, you feel as though you've gotten poorer, even when nothing in your material circumstances has changed.
+  </div>
+
+  <div class="method-box">
+    <strong>Why this is the cornerstone of Part 1</strong>
+    Luttmer mathematically holds absolute income constant. The same wage, the same household, the same prices — only the neighborhood's average income differs, and well-being shifts. This is the cleanest possible refutation of the libertarian claim that "what matters is your own absolute living standard, not what others have." The data say otherwise: <em>relative position is itself a determinant of mental health</em>.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication</strong>
+    Trickle-down economics fails on its own terms when measured by well-being, not GDP. If neighbors' rising incomes inflict psychological costs on those who don't keep pace, then growth that concentrates at the top doesn't merely fail the poor — it actively harms them. <strong>Visible inequality is itself a pollutant</strong>, and reducing top incomes (through progressive taxation, capping executive compensation) is a welfare-improving intervention. The visible luxury consumption of the wealthy in unequal societies — the gated communities, the luxury car showrooms, the conspicuous social media displays — is not a private matter but a public health externality.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="eibner">
+  <div class="study-num">03</div>
+  <span class="method-tag tag-iv">Relative deprivation · Yitzhaki index</span>
+  <h2>Eibner & Evans — relative deprivation drives smoking and obesity</h2>
+  <h3>Eibner & Evans · 2005</h3>
+  <p class="citation">Eibner, C., & Evans, W.N. (2005). "Relative deprivation, poor health habits, and mortality." <em>Journal of Human Resources</em>, 40(3), 591-620.</p>
+
+  <p>Why do behavioral health risks — smoking, alcohol use, obesity — concentrate among the poor? The conventional explanation blames the poor themselves: ignorance, low education, weak willpower, poor culture. Eibner and Evans dismantled this framing.</p>
+
+  <p>Their innovation was to construct a "relative deprivation index" (the Yitzhaki index) — a measure of how far an individual sits below the average of their reference group (people of similar age, education, region). Two people with identical incomes can have very different relative deprivation: one in a wealthy suburb experiences high relative deprivation; the other in a poor neighborhood experiences low relative deprivation despite the same wage.</p>
+
+  <div class="question">"Two people earn the same wage. One lives among the rich, one among the poor. Which one smokes more?"</div>
+
+  <div class="finding">
+    <strong>Key findings</strong>
+    After controlling for absolute income, education, age, race, and marital status, individuals with high relative deprivation are <strong>significantly more likely to smoke, to be obese, to be sedentary, to suffer mental health problems, and to die earlier</strong>. The "poor health behaviors of the poor" turn out to be <em>responses to status pressure</em>, not failures of personal virtue.
+  </div>
+
+  <div class="method-box">
+    <strong>Why this dismantles the moral-failure narrative</strong>
+    For decades, public health campaigns have framed smoking and obesity as individual moral choices — implying that the poor smoke because they are imprudent. Eibner and Evans show this is empirically wrong. Holding absolute resources constant, those who experience relative inferiority cope through chemical and caloric self-medication. Smoking is a way to manage the chronic anxiety of being beneath others. Calorie-dense food is comfort under conditions of perpetual threat. The behavior is rational, given the position.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication</strong>
+    Anti-smoking campaigns, sin taxes, and "personal choice" frameworks treat the symptom while leaving the cause untouched. As long as societies generate the relative deprivation that produces these coping behaviors, no amount of moralizing will change the gradient. <strong>Reducing relative deprivation — through wage compression, progressive taxation, and a strong welfare state — is the structural cure</strong>. Sin taxes on cigarettes hit poor smokers hardest while leaving the conditions that drive their smoking intact: a regressive policy disguised as public health.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="boyce">
+  <div class="study-num">04</div>
+  <span class="method-tag tag-panel">17-year panel · rank hypothesis</span>
+  <h2>Boyce, Brown & Moore — rank, not absolute income, predicts wellbeing</h2>
+  <h3>Boyce, Brown & Moore · 2010</h3>
+  <p class="citation">Boyce, C.J., Brown, G.D.A., & Moore, S.C. (2010). "Money and happiness: Rank of income, not income, affects life satisfaction." <em>Psychological Science</em>, 21(4), 471-475.</p>
+
+  <p>Boyce and colleagues tested a radical hypothesis: <em>what determines your happiness is not the money in your account, but your rank in the income distribution</em>. Earning £30,000 means something different in different societies — top 10% in one, bottom 30% in another.</p>
+
+  <p>Using the British Household Panel Survey (BHPS) — a <strong>17-year panel</strong> following the same individuals — they tested whether absolute income or income rank better predicts life satisfaction.</p>
+
+  <div class="question">"If everyone got 10% richer at once, would anyone be happier?"</div>
+
+  <div class="finding">
+    <strong>Key findings</strong>
+    Once income rank is controlled for, absolute income has no significant effect on life satisfaction. <strong>Two people earning identical wages can have very different well-being depending on their rank.</strong> When economic growth lifts everyone proportionally, no one moves up the ranking, and aggregate well-being doesn't increase — even though absolute consumption rises.
+  </div>
+
+  <div class="method-box">
+    <strong>The mechanism behind the Easterlin paradox</strong>
+    In 1974 Richard Easterlin observed that countries don't get happier as they get richer. Boyce found the mechanism 35 years later: well-being is driven by rank, and rank doesn't change with growth. You can stay in the same place in the queue even as the absolute wealth of the queue increases.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication</strong>
+    The growth-at-all-costs paradigm collapses on its own terms. If happiness depends on rank rather than absolute income, then the only way to raise aggregate well-being is to <strong>compress the income distribution</strong> — to bring the bottom up and the top down. A society that grows its GDP while leaving the rank structure intact has bought itself nothing in human terms. Turkey's GDP per capita roughly tripled between 2003 and 2013, while life satisfaction remained roughly flat: a textbook illustration of Boyce's prediction. The only growth strategy that pays welfare dividends is one that <em>also redistributes</em>.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="hamilton">
+  <div class="study-num">05</div>
+  <span class="method-tag tag-natural">Natural experiment · migration</span>
+  <h2>Hamilton & Kawachi — the immigrant natural experiment</h2>
+  <h3>Hamilton & Kawachi · 2013</h3>
+  <p class="citation">Hamilton, T.G., & Kawachi, I. (2013). "Changes in income inequality and the health of immigrants." <em>Social Science & Medicine</em>, 80, 57-66.</p>
+
+  <p>If inequality really damages health, moving from an unequal society to a more equal one should improve health, and vice versa. Hamilton and Kawachi tested this directly.</p>
+
+  <p>They examined immigrants to the United States, classifying them by the inequality of their country of origin. Some came from more unequal societies than the US (much of Latin America) — for them, moving to the US meant moving toward greater equality. Others came from more equal societies (most of Europe) — for them, moving to the US meant moving toward greater inequality.</p>
+
+  <div class="question">"Does moving to a more equal society actually improve health?"</div>
+
+  <div class="finding">
+    <strong>Key finding</strong>
+    Among immigrants who had been in the US for 6-20 years, those who moved to greater equality (i.e., from more unequal countries) reported <strong>significantly better self-rated health</strong> than those who moved toward greater inequality. <em>Same country, same insurance, similar incomes — only the inequality history differs, and health diverges.</em>
+  </div>
+
+  <div class="method-box">
+    <strong>Why this is a clean natural experiment</strong>
+    Every immigrant in the sample lives in the same United States — same medical system, same air, same food prices. The only systematic difference is the inequality of the society they came from. The health effect cannot be confounded by access to care or by wage levels.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication</strong>
+    Inequality leaves a biological imprint that travels across borders. This means that the health damage of an unequal society is not just a matter of current policy — it is also a matter of <em>historical exposure</em>. Countries that built more equal societies in the post-war period (Sweden, Denmark, post-war Germany) bequeathed their citizens a health dividend that compounds across generations. Countries that allowed inequality to widen over recent decades (the US, the UK, Turkey) are accumulating a health debt that will continue to be paid even after policy reforms.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="decelles">
+  <div class="study-num">06</div>
+  <span class="method-tag tag-experiment">Natural experiment · airplanes</span>
+  <h2>DeCelles & Norton — first class triggers air rage</h2>
+  <h3>DeCelles & Norton · 2016</h3>
+  <p class="citation">DeCelles, K.A., & Norton, M.I. (2016). "Physical and situational inequality on airplanes predicts air rage." <em>Proceedings of the National Academy of Sciences</em>, 113(20), 5588-5591.</p>
+
+  <p>This study may sound trivial but it provides one of the cleanest demonstrations of inequality's behavioral effects. The question: <em>does the presence of a first-class cabin affect economy passengers' behavior?</em></p>
+
+  <p>The data are striking: records of <strong>millions of flights and every "passenger rage" incident</strong> from a major international airline. The authors split flights into two groups — those with a first-class cabin and those without. Same aircraft model, same passenger demographics, same flight duration; only the visible class structure differs.</p>
+
+  <div class="question">"What does merely seeing a first-class cabin do to me?"</div>
+
+  <div class="finding">
+    <strong>Key findings</strong>
+    Flights with a first-class cabin had <strong>4× more passenger rage incidents</strong>. The effect was strongest for economy passengers who walked through first class to reach their seats — those who physically experienced the inequality. The second, more striking finding: <em>first-class passengers themselves</em> were 12× more likely to commit rage incidents on flights with a separate economy section. <strong>Visible inequality damages the behavior of both ends of the hierarchy.</strong>
+  </div>
+
+  <div class="method-box">
+    <strong>Why this is a methodological gem</strong>
+    Inequality's effect is isolated from income, education, race, culture, and every other confound. Same flight, same conditions — only the cabin layout differs. Bodies and brains respond, instantly and measurably, to the visibility of hierarchy.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication</strong>
+    Inequality is not an abstract statistic. It is a physical signal that the body processes in real time. The proliferation of visible class markers — gated communities, luxury malls adjacent to working-class neighborhoods, segregated transit, exclusive lounges — is not a neutral aesthetic preference but an active stressor on the polity. <strong>Mixed-income housing, integrated public space, universal high-quality public services</strong> are not merely matters of social cohesion: they are reductions in the daily psychological tax that inequality imposes on everyone.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="layte">
+  <div class="study-num">07</div>
+  <span class="method-tag tag-mediation">Mediator · biological wear</span>
+  <h2>Layte & Whelan — status anxiety wears down the body</h2>
+  <h3>Layte & Whelan · 2014 (and Layte · 2012)</h3>
+  <p class="citation">Layte, R., & Whelan, C. (2014). "Who feels inferior? A test of the status anxiety hypothesis of social inequalities in health." <em>European Sociological Review</em>, 30(4), 525-535. Layte, R. (2012). <em>European Sociological Review</em>, 28(4), 498-511.</p>
+
+  <p>Layte and Whelan analyzed responses from 35,000 people across 31 European countries to a single question: "When you compare yourself with others, do you feel <em>inferior</em> in terms of income or lifestyle?" This is a measure of <strong>status anxiety</strong>.</p>
+
+  <div class="question">"Is status anxiety the bridge between inequality and illness?"</div>
+
+  <div class="finding">
+    <strong>Key findings</strong>
+    Status anxiety is higher in more unequal countries — and crucially, this is true <strong>across all income groups, not just the poor</strong>. When status anxiety is added to the model, the direct effect of inequality on mental health largely disappears. Inequality damages mental health <em>through the channel of status anxiety</em>. This mechanism has subsequently been demonstrated at the biological level: chronically elevated cortisol, blood pressure, inflammation, and hormonal imbalance — what researchers call "allostatic load" or biological weathering.
+  </div>
+
+  <div class="method-box">
+    <strong>Allostatic load</strong>
+    The body can handle short-term stress: cortisol rises, then normalizes. But under chronic stress, the system stays "on" — cortisol always elevated, blood pressure always high, immune system always activated. This sustained activation wears down organs over years: heart, kidneys, brain, immune defenses. The biological aging clock runs faster. Status anxiety is one of the largest sources of this load in modern populations.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication</strong>
+    Status anxiety is not confined to the poor — it haunts the middle and upper-middle class as well. The relentless competitive pressure of unequal societies wears down everyone except the very top. This means inequality reduction is not a redistribution from rich to poor that benefits only the poor — it is a <strong>system-wide reduction in chronic stress</strong> that benefits the great majority. The widely observed "burnout culture" of modern professionals, the explosion of anxiety disorders in young workers, the spread of antidepressants across all income classes — all are predicted by the status-anxiety model. Inequality reduction is, in this sense, <em>universally welfare-enhancing</em>.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="daly">
+  <div class="study-num">08</div>
+  <span class="method-tag tag-bigdata">State/regional panel</span>
+  <h2>Daly et al. — the poor commit suicide more in rich neighborhoods</h2>
+  <h3>Daly, Oswald, Wilson & Wu · 2011</h3>
+  <p class="citation">Daly, M.C., Oswald, A.J., Wilson, D., & Wu, S. (2011). "Dark contrasts: The paradox of high rates of suicide in happy places." <em>Journal of Economic Behavior & Organization</em>, 80(3), 435-442.</p>
+
+  <p>A paradox: the US states that score highest on average happiness (Utah, Hawaii) also have among the highest suicide rates. Daly and colleagues set out to explain this contradiction.</p>
+
+  <p>The hypothesis: in regions with high average wealth, the relative deprivation experienced by the poor is sharper. Everything around them looks good; they look bad. The contrast deepens despair.</p>
+
+  <div class="question">"Why do happy places have so many suicides?"</div>
+
+  <div class="finding">
+    <strong>Key findings</strong>
+    After individual-level controls, the same person — same income, same demographic profile — has a <strong>significantly higher suicide risk when living in a wealthier, happier-on-average state</strong>. The suicide risk is driven not by absolute deprivation but by the comparative context.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication</strong>
+    Suicide is the most underweighted dimension of the inequality literature. Mental health crises in modern unequal societies are not random tragedies but predictable consequences of a structural condition. <strong>Investment in mental health services in low-income areas of high-inequality regions is essential — but downstream of the structural problem.</strong> The deeper intervention is to reduce the visible wealth gap that produces the comparative despair. Strong unions, wealth taxes, public housing in affluent areas, anti-segregation policies — these are mental health policies in disguise.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="oishi">
+  <div class="study-num">09</div>
+  <span class="method-tag tag-panel">37-year panel · USA</span>
+  <h2>Oishi et al. — growth without equality doesn't deliver happiness</h2>
+  <h3>Oishi, Kesebir & Diener · 2011</h3>
+  <p class="citation">Oishi, S., Kesebir, S., & Diener, E. (2011). "Income inequality and happiness." <em>Psychological Science</em>, 22(9), 1095-1100.</p>
+
+  <p>Recall the Easterlin paradox: countries don't get happier as they grow. Maybe <em>inequality eats the happiness returns of growth</em>?</p>
+
+  <p>Using US data from 1972-2008 (37 years, 48,000+ respondents), Oishi and colleagues measured average income and the Gini coefficient for each year, then regressed happiness on both.</p>
+
+  <div class="question">"If the country is getting richer, why aren't I happier?"</div>
+
+  <div class="finding">
+    <strong>Key findings</strong>
+    Low-income Americans were significantly less happy in years of high inequality — <em>regardless of how high average national income climbed</em>. Mediator analysis showed the channel runs through "distrust of others" and "perception that the system is unjust." Economic growth that bypasses the bottom contributes nothing to their well-being; inequality interrupts the connection between growth and happiness.
+  </div>
+
+  <div class="method-box">
+    <strong>Direct relevance to Turkey</strong>
+    Turkey's GDP per capita roughly tripled between 2003 and 2013. Yet Life Satisfaction Survey reports of "poor health" and "unhappiness" barely moved. In recent years, "unable to make ends meet" reports among the bottom quintile have actually increased. Oishi's mechanism — inequality eating the happiness returns of growth — directly explains this. <strong>Growth is not a substitute for redistribution; it requires redistribution to deliver welfare.</strong>
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication</strong>
+    The dominant developmentalist creed — "grow first, redistribute later" — fails on its own terms. Without redistribution, growth produces neither equality nor happiness. The political class often points to GDP growth as a defense against critique of inequality; this study removes that defense. <strong>Equality is not a luxury that wealthy societies can afford after growth — it is a precondition for growth to translate into welfare.</strong>
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="eisenberger">
+  <div class="study-num">10</div>
+  <span class="method-tag tag-mechanism">Brain imaging · fMRI</span>
+  <h2>Eisenberger — social pain is processed like physical pain</h2>
+  <h3>Eisenberger, Lieberman, Williams · 2003</h3>
+  <p class="citation">Eisenberger, N.I., Lieberman, M.D., & Williams, K.D. (2003). "Does rejection hurt? An fMRI study of social exclusion." <em>Science</em>, 302(5643), 290-292.</p>
+
+  <p>"Rejection hurts" is a metaphor in everyday speech. Eisenberger and colleagues at UCLA tested whether it is also a literal description of the brain's response.</p>
+
+  <p>Participants played a simple online ball-passing game (Cyberball). The game was rigged: at a certain point, the other two "players" (actually a computer) began passing only to each other, excluding the participant. fMRI captured what happened in the participant's brain.</p>
+
+  <div class="question">"Where in the brain is social exclusion processed?"</div>
+
+  <div class="finding">
+    <strong>Key finding</strong>
+    The region most strongly activated by social exclusion was the <strong>anterior cingulate cortex (ACC)</strong> — previously known as a region activated by <em>physical pain</em>. The brain processes social pain through nearly the same circuitry as physical injury. A 2010 follow-up by DeWall and colleagues showed that <em>acetaminophen (Tylenol) reduces social pain</em> — a physical painkiller dampens social hurt.
+  </div>
+
+  <div class="method-box">
+    <strong>The relevance to inequality</strong>
+    Unequal societies make hierarchy visible. Those at the bottom receive constant signals of exclusion: dismissive glances at the supermarket, judgments based on neighborhood, "inadequate parent" labeling, daily comparison through social media. The brain processes these as physical pain. Chronic ACC activation drives systemic inflammation, depression, cardiovascular disease.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication</strong>
+    The harm of inequality is not only material — it is neurological. Every visible signal of class hierarchy translates into measurable brain activity that, repeated over years, sickens bodies. This means that <strong>policies that reduce visible class signals (universal high-quality public schools, universal public health, integrated public space, mixed-income housing) are not merely egalitarian symbolism but neurological harm reduction</strong>. The libertarian objection that "inequality is just a number on a spreadsheet" is empirically false — inequality is a continuous chemical signal in the brain of everyone exposed to it.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="kiecolt">
+  <div class="study-num">11</div>
+  <span class="method-tag tag-mechanism">Quasi-RCT · physiology</span>
+  <h2>Kiecolt-Glaser — stress slows wound healing</h2>
+  <h3>Kiecolt-Glaser et al. · 2005</h3>
+  <p class="citation">Kiecolt-Glaser, J.K., Loving, T.J., Stowell, J.R. et al. (2005). "Hostile marital interactions, proinflammatory cytokine production, and wound healing." <em>Archives of General Psychiatry</em>, 62(12), 1377-1384.</p>
+
+  <p>Kiecolt-Glaser tested the biological cost of stress as directly as ethics permits: she brought couples into the lab, induced standardized small wounds (8mm vacuum blisters), and then assigned them topics to discuss — some hostile, some neutral. She measured how quickly the wounds healed.</p>
+
+  <div class="question">"Can a hostile conversation actually slow your body's healing?"</div>
+
+  <div class="finding">
+    <strong>Key finding</strong>
+    Wounds in couples who had hostile discussions healed <strong>40% more slowly</strong>. Their blood showed elevated proinflammatory cytokines (IL-6, TNF-α). Social tension → altered immune response → physical impairment of healing. All of it visible within 24 hours, all of it measurable.
+  </div>
+
+  <div class="method-box">
+    <strong>Scaling up to inequality</strong>
+    Chronic economic pressure, status anxiety, social distrust — these are continuous low-grade stressors. If a 30-minute hostile conversation produces measurable immune changes, what does decades of subordination produce? This study supplies the biochemical mechanism behind the Whitehall finding: stress → cortisol → suppressed immunity → cardiovascular disease, diabetes, depression. The chain is no longer hypothetical; it has been measured in the laboratory.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication</strong>
+    "Poverty kills" is not a metaphor; it is a description of immune function. The chronic stress of economic precarity literally compromises the body's defenses. This means <strong>any intervention that reduces precarity</strong> — strong unemployment insurance, universal basic services, secure tenancy laws, predictable scheduling rules for low-wage workers, debt cancellation programs, child allowances — <strong>operates as physical health policy</strong>. The conventional separation between "economic policy" and "health policy" collapses once we look at the biology.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<!-- PART 2 -->
+<!-- ============================================================ -->
+<div class="section-head">
+  <div class="section-num">Part 2</div>
+  <h2>The Limits of Universal Insurance</h2>
+  <p>"We have universal coverage — what more can governments do?" This is a common defensive line, in Turkey as in many European systems. The studies in this section answer it. They are drawn exclusively from settings with universal health coverage, where insurance access is constitutionally guaranteed and yet economic position continues to predict mortality, morbidity, and mental health. The political conclusion is uncompromising: <strong>health justice requires economic justice; medical access alone does not deliver it</strong>.</p>
+  <div class="question-box">"In a country like Turkey, where 99% are covered by universal health insurance, does economic position still affect health? Through what channels?"</div>
+</div>
+
+<div class="cross-ref"><strong>Cross-reference:</strong> Whitehall (#01) and Hamilton & Kawachi (#05) were already conducted in universal-insurance settings (the British NHS, the post-Medicaid US for older adults). They were placed in Part 1 because their primary contribution is to demonstrate the income-independent effect of inequality. The studies in Part 2 add specifically to the case that universal coverage does not eliminate the channels of harm.</div>
+
+<!-- ============================================================ -->
+<div class="study" id="sullivan">
+  <div class="study-num">12</div>
+  <span class="method-tag tag-natural">Natural experiment · job loss</span>
+  <h2>Pennsylvania plant closures — does losing your job kill you?</h2>
+  <h3>Sullivan & von Wachter · 2009</h3>
+  <p class="citation">Sullivan, D., & von Wachter, T. (2009). "Job displacement and mortality: An analysis using administrative data." <em>Quarterly Journal of Economics</em>, 124(3), 1265-1306.</p>
+
+  <p>Job loss damages health — every clinician knows this. But proving it causally is hard: maybe sick people lose their jobs (reverse causation), not the other way around.</p>
+
+  <p>Sullivan and von Wachter solved this using mass plant closures in Pennsylvania during the steel crisis of the early 1980s. When a plant closes, <em>everyone</em> loses their job — the healthy and the sick, the productive and the unproductive. Pre-existing health does not determine the layoff.</p>
+
+  <div class="question">"The worker wasn't fired because they were sick — the entire plant closed. So what comes next is the result of what?"</div>
+
+  <div class="finding">
+    <strong>Key findings</strong>
+    Displaced workers' first-year mortality rate was <strong>50-100% higher</strong> than the comparison group. Twenty years later, mortality was still 10-15% elevated. Annualized, this implies a <strong>1-1.5 year reduction in life expectancy</strong> from a single layoff event.
+  </div>
+
+  <div class="method-box">
+    <strong>Why insurance doesn't explain this</strong>
+    Replication studies in countries with universal insurance — Sweden (Eliason & Storrie 2009: 44% mortality increase), Netherlands (Bloemen et al. 2018: 34-46%), Germany, Finland — find effects of similar magnitude. The driver is not loss of medical access. It is the cardiovascular shock of acute economic stress, the depression-suicide pathway, the destabilization of family life, the corrosion of identity, the disruption of nutrition.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication</strong>
+    Mass layoffs during industrial restructuring are not "the cost of progress"; they are <strong>preventable mortality events</strong>. Strong unemployment insurance, robust public employment programs, transition support, retraining schemes — these are not handouts but life-saving interventions. The casual cruelty of "free market" labor flexibility hides a body count. Economies that protect workers from displacement (Denmark's flexicurity, Germany's Kurzarbeit) buy themselves health gains that show up nowhere on a balance sheet but are visible in mortality data. <strong>Workers' rights and labor protections are health policy</strong>.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="marcus">
+  <div class="study-num">13</div>
+  <span class="method-tag tag-natural">Natural experiment · family spillover</span>
+  <h2>German plant closures — when your spouse loses their job</h2>
+  <h3>Marcus · 2013</h3>
+  <p class="citation">Marcus, J. (2013). "The effect of unemployment on the mental health of spouses — Evidence from plant closures in Germany." <em>Journal of Health Economics</em>, 32(3), 546-558.</p>
+
+  <p>Marcus extended Sullivan & von Wachter's logic to spouses. Using German administrative data, he tracked the mental health of partners of workers displaced by plant closures. Germany has universal health insurance — the access channel is closed by design.</p>
+
+  <div class="question">"My spouse lost their job. Why am I the one becoming depressed?"</div>
+
+  <div class="finding">
+    <strong>Key finding</strong>
+    A spouse's plant-closure displacement caused a <strong>0.21 standard deviation deterioration</strong> in the partner's mental health. For comparison, this is larger than the effect of becoming uninsured in countries without universal coverage. The mechanisms: household tension, future uncertainty, identity crisis (collapse of breadwinner roles), disrupted plans.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication</strong>
+    The damage of economic shocks spreads through families. A single layoff sickens not one but two or three people. This means the social cost of mass unemployment is systematically underestimated in conventional accounting. <strong>Family-protective unemployment policy — benefits adequate to maintain household stability, emergency rent support, debt forbearance — is not generosity but cost-effective public health</strong>. The neoliberal idea that workers should bear the full risk of labor market churn is, in its biological consequences, simply unsustainable.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="marmot-bobak">
+  <div class="study-num">14</div>
+  <span class="method-tag tag-natural">Natural experiment · transition</span>
+  <h2>Marmot & Bobak — the post-Soviet transition</h2>
+  <h3>Marmot & Bobak · 2000</h3>
+  <p class="citation">Marmot, M., & Bobak, M. (2000). "International comparators and poverty and health in Europe." <em>BMJ</em>, 321(7269), 1124-1128.</p>
+
+  <p>The collapse of the Soviet Union between 1989 and 1991 produced one of the largest natural experiments in social science. A socialist economic system gave way to capitalism — but at different speeds, with different inequality outcomes, in different countries.</p>
+
+  <p>The Czech Republic, Hungary, Poland, and Slovenia transitioned with relatively contained inequality, retaining strong public services. Russia, Ukraine, Belarus, Estonia experienced inequality explosions — Gini coefficients shot from 0.25 to over 0.40 within a few years. <strong>Same region, same starting point, same Soviet-era universal health systems — but radically different inequality shocks.</strong></p>
+
+  <div class="question">"What happens to a country's health when inequality suddenly explodes?"</div>
+
+  <div class="finding">
+    <strong>Key finding</strong>
+    <strong>Russian male life expectancy fell by six years during the 1990s</strong> — the largest peacetime collapse in modern history. The Czech Republic and Slovenia, which preserved more equality, saw flat or rising life expectancy. The size of the inequality shock correlated tightly with the size of the mortality increase across the transition countries.
+  </div>
+
+  <div class="method-box">
+    <strong>Why insurance is not the explanation</strong>
+    All transition countries inherited universal Soviet-era health systems and largely preserved them. Even Russia, where everything else collapsed, maintained the basic structure of universal coverage. The mortality crisis cannot be attributed to loss of medical access — it tracks directly with the inequality explosion.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication</strong>
+    "Shock therapy" — the Washington Consensus prescription of rapid privatization, deregulation, and austerity — was not an economic technicality but <strong>a public health catastrophe</strong>. The price was paid in millions of premature deaths, mostly among working-age men whose jobs, identities, and social networks were destroyed at once. The policy class that imposed shock therapy bore no responsibility for these deaths; the workers and their families paid them. Any future structural transition — including the climate transition — must be designed with this lesson in view: <strong>inequality-increasing reforms are mortality-increasing reforms</strong>. Just transition cannot be a slogan; it must be a binding policy constraint.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="kondo">
+  <div class="study-num">15</div>
+  <span class="method-tag tag-review">Meta-analysis · 60 million people</span>
+  <h2>Kondo meta-analysis — 60 million people, one finding</h2>
+  <h3>Kondo, Sembajwe, Kawachi et al. · 2009</h3>
+  <p class="citation">Kondo, N. et al. (2009). "Income inequality, mortality, and self rated health: meta-analysis of multilevel studies." <em>BMJ</em>, 339, b4471.</p>
+
+  <p>A single study can be wrong. Real scientific weight comes from convergence across many studies, in many countries, with many methods, all reaching the same conclusion. Kondo and colleagues pooled 9 large cohort studies — from Denmark, Finland, Norway, New Zealand, Sweden, and the US — totaling <strong>60 million individuals</strong> with follow-up periods from 1 to 28 years.</p>
+
+  <div class="question">"Different countries, different years, different methods — do they all tell the same story?"</div>
+
+  <div class="finding">
+    <strong>Key findings</strong>
+    A 0.05 increase in the Gini coefficient was associated with an <strong>8% increase in mortality risk</strong> (RR=1.08), after controlling for individual income, education, and demographic factors. The authors also identified a <strong>threshold effect</strong>: above a Gini of 0.30, the inequality-mortality link strengthens substantially. Turkey's Gini hovers around 0.40 — well above this threshold.
+  </div>
+
+  <div class="method-box">
+    <strong>The universal-coverage majority</strong>
+    Most studies in the meta-analysis come from universal-insurance countries — the Nordics, the UK, New Zealand. Insurance coverage is not the explanation for the inequality-mortality link. The link persists where access is constitutionally guaranteed.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication</strong>
+    The authors estimate that lowering Gini below 0.30 in OECD countries would prevent <strong>1.5 million deaths per year</strong> — about 9.6% of all working-age mortality. This is the magnitude of the public health gain from inequality reduction. For comparison, a similarly large mortality reduction from any single medical innovation would justify hundreds of billions in investment. <strong>Inequality reduction is the single largest unrealized public health intervention available to wealthy societies.</strong> Wealth taxes, top-marginal income taxes, inheritance taxes, capital gains reform — these are the equivalent of a vaccine campaign in mortality terms.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="chetty">
+  <div class="study-num">16</div>
+  <span class="method-tag tag-bigdata">Big data · 1.4 billion observations</span>
+  <h2>Chetty — 15 years of life lost, even with Medicare</h2>
+  <h3>Chetty, Stepner, Abraham et al. · 2016</h3>
+  <p class="citation">Chetty, R. et al. (2016). "The Association Between Income and Life Expectancy in the United States, 2001-2014." <em>JAMA</em>, 315(16), 1750-1766.</p>
+
+  <p>Raj Chetty's team matched the entire US tax record (1.4 billion observations) to Social Security death records — every adult American's income to their year of death.</p>
+
+  <div class="question">"Between the richest 1% and the poorest 1%, how many years of life are lost to inequality?"</div>
+
+  <div class="finding">
+    <strong>Key findings</strong>
+    The richest 1% of American men live <strong>14.6 years longer</strong> than the poorest 1%. For women, the gap is 10.1 years. The gap <em>widened</em> between 2001 and 2014 — the rich gained 0.20 years annually, the poor only 0.08. Inequality of life is a growing inequality.
+  </div>
+
+  <p>A second finding: <strong>among the poor, life expectancy varies dramatically by location</strong>. A poor New Yorker outlives a poor Las Vegan by 5 years. The richest, by contrast, live the same long lives wherever they are. Among the poor, the variation tracks local rates of smoking, obesity, and physical inactivity — i.e., the local capacity for public-health-supporting collective infrastructure.</p>
+
+  <div class="method-box">
+    <strong>Medicare and the persistence of the gradient</strong>
+    All Americans 65 and older have universal coverage through Medicare. The Chetty sample covers ages 40-76 — a substantial fraction of which is fully covered. Yet the income-mortality gradient remains steep. Insurance access does not close the gap. Channels operating outside the medical system — chronic stress, environmental exposure, behavioral coping, social capital — do the work.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication</strong>
+    Inequality is not abstract; it is a difference in years of life. Fifteen years for men, ten for women. Conventional health-policy debate focuses almost entirely on hospital quality, drug pricing, insurance design — the medical system. Chetty's data reveal these as second-order interventions. The first-order intervention is <strong>income redistribution itself</strong>: the gradient from poor to rich tracks years of life so directly that any policy raising the bottom and lowering the top is a longevity policy. Among the poor, the variation across cities reveals that <em>local public investment</em> — clean air, walkable neighborhoods, recreational space, public transit, smoking restrictions — adds years of life. The state of New York is, in this sense, a longevity-prolongation system; the state of Mississippi is not.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="zheng">
+  <div class="study-num">17</div>
+  <span class="method-tag tag-cohort">Lag analysis · 21-year follow-up</span>
+  <h2>Zheng — today's inequality kills you in twelve years</h2>
+  <h3>Zheng · 2012</h3>
+  <p class="citation">Zheng, H. (2012). "Do people die from income inequality of a decade ago?" <em>Social Science & Medicine</em>, 75(1), 36-45.</p>
+
+  <p>If inequality really damages health, the effect cannot be instantaneous — biological mechanisms take time to accumulate. Zheng tested this directly, following 701,179 individuals over <strong>21 years</strong>, measuring inequality at multiple lags.</p>
+
+  <div class="question">"Today's rising inequality — when does it start killing people?"</div>
+
+  <div class="method-box">
+    <strong>What sets this apart</strong>
+    Earlier studies treated inequality as a "frozen" variable — measuring it once and asking whether it predicted contemporaneous mortality. Zheng tracked the same individual for 21 years and measured each year's inequality independently, then identified at what lag the effect was strongest. He also controlled for individual income, separating the effect of "being poor" from "living in an unequal society."
+  </div>
+
+  <div class="finding">
+    <strong>Key finding</strong>
+    The inequality effect on mortality begins <strong>3-5 years</strong> after the inequality increase, peaks at <strong>12 years</strong>, and persists for over 20 years. This pattern decisively refutes reverse causation: sick people did not generate the inequality 12 years before their deaths. Inequality came first; sickness followed.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication</strong>
+    The political consequence of this finding is grim. Inequality reductions today produce health benefits in the 2030s. Inequality increases today produce a mortality wave that begins now and peaks in the 2030s. <strong>The post-2018 inequality surge in Turkey (rapid lira depreciation, real wage collapse, asset price explosion) is, by this model, a mortality event whose peak is still ahead of us.</strong> The deaths it will cause are already locked in by past policy. Conversely: a serious inequality-reduction agenda implemented today will not show its full health benefits until the 2030s — politicians whose horizons are bounded by election cycles have weak incentives to undertake it. This is a structural reason why redistributive policy requires <em>movements with long time horizons</em>: trade unions, social democratic parties, organized civil society. Episodic individual-leader politics cannot solve a 12-year-lagged problem.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="elgar">
+  <div class="study-num">18</div>
+  <span class="method-tag tag-mediation">Mediator analysis · 33 countries</span>
+  <h2>Elgar — trust matters more than public spending</h2>
+  <h3>Elgar · 2010 (and Elgar & Aitken · 2011)</h3>
+  <p class="citation">Elgar, F.J. (2010). "Income inequality, trust, and population health in 33 countries." <em>American Journal of Public Health</em>, 100(11), 2311-2315.</p>
+
+  <p>Suppose we accept that inequality damages health. <em>Through what mechanism?</em> Two leading hypotheses compete:</p>
+  <ul style="padding-left:1.5rem;margin-bottom:1.25rem">
+    <li><strong>Neo-materialist hypothesis:</strong> equal societies invest more in public goods — schools, hospitals, transit, environmental regulation. The poor benefit disproportionately. Inequality hurts health by undermining public investment.</li>
+    <li><strong>Psychosocial hypothesis:</strong> inequality poisons social relations — distrust, status anxiety, social isolation rise. Chronic stress wears down bodies. Inequality hurts health by destroying social fabric.</li>
+  </ul>
+
+  <p>Elgar pitted them against each other in 33 countries through mediator analysis.</p>
+
+  <div class="question">"Does inequality kill through bad public services, or through broken social trust?"</div>
+
+  <div class="finding">
+    <strong>Key finding</strong>
+    The inequality-mortality link runs <strong>primarily through declining social trust</strong>, not through public spending levels. Public health expenditure and social service spending played a much weaker mediating role. Inequality damages health less through "what we collectively buy" and more through "how much we trust each other." The follow-up (Elgar & Aitken 2011) found the same pattern for homicide rates.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication — and a complication</strong>
+    This finding has been weaponized by both left and right, in ways neither fully justified. The right has occasionally read it as: "spending doesn't matter, only trust does — therefore cut welfare." This misreads the result. Public spending does mediate, just less than trust. More importantly, public spending and trust are not independent: <strong>welfare states build trust by demonstrating that the polity cares for its members</strong>. Universal services, common spaces, shared institutions are the soil in which trust grows. Erode them through privatization and means-testing, and trust erodes with them. The Nordic countries combine the highest social spending with the highest trust; the US combines stratified spending with collapsed trust. The political project is not to choose between trust and spending but to recognize that <strong>universal, decommodified provision builds both at once</strong>.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="haushofer">
+  <div class="study-num">19</div>
+  <span class="method-tag tag-experiment">Field + lab experiments</span>
+  <h2>Haushofer & Fehr — poverty cripples decision-making</h2>
+  <h3>Haushofer & Fehr · 2014</h3>
+  <p class="citation">Haushofer, J., & Fehr, E. (2014). "On the psychology of poverty." <em>Science</em>, 344(6186), 862-867.</p>
+
+  <p>"Why do poor people make such bad decisions?" — a popular prejudice for decades. Less savings, more gambling, persistent smoking and drinking. The conventional explanation: poor character, poor education, poor culture. Haushofer and Fehr destroyed this narrative.</p>
+
+  <p>Their hypothesis: <strong>poverty → chronic stress → elevated cortisol → suppression of the prefrontal cortex (long-term planning) → impaired decision-making</strong>. You don't make poor decisions because you are poor in some moral sense; you make them because chronic poverty has measurably impaired the brain regions responsible for deliberation.</p>
+
+  <div class="question">"Do poor people make poor decisions, or do poor circumstances impair decision-making?"</div>
+
+  <div class="method-box">
+    <strong>The experimental design that settled it</strong>
+    Not observational but experimental: Kenyan farmers were tested before harvest (high economic pressure) and after harvest (low pressure). <em>Same individual, same intelligence, same education, same culture — only economic stress differs.</em> Pre-harvest: cortisol elevated, cognitive performance impaired (equivalent to a 13-IQ-point drop), high time discounting. Post-harvest: cortisol normalized, cognitive performance restored, patience returned. <strong>The person is held constant; the pressure varies; the effect is causal.</strong> Mani et al. (2013, also in Science) found parallel results in India.
+  </div>
+
+  <div class="finding">
+    <strong>Key findings</strong>
+    Poverty stress directly suppresses <strong>working memory, executive function, impulse control</strong>. The cognitive impairment is large — equivalent to a sleepless night, every day, indefinitely. Crucially, <em>the effect reverses</em>: when pressure lifts, cognitive performance returns. Poverty is not a fixed trait of the poor; it is a removable load on otherwise functional brains.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication — the structural case for unconditional cash</strong>
+    The "personal responsibility" framework that dominates conservative welfare discourse is biologically incoherent. The poor cannot reason their way out of conditions that impair their reasoning. The premise of conditional welfare ("benefits if you behave correctly") imposes cognitive demands on people whose cognition has been impaired by the very conditions the program aims to address. The premise of austerity ("hard times build character") prescribes more of the toxin as cure. <strong>Unconditional cash transfers, child allowances, universal basic services, and sufficient minimum wages are not handouts but cognitive restoration interventions</strong>. They lift the cortisol load and restore the planning capacity that conservative critics demand the poor demonstrate. The biology vindicates the social-democratic position: <em>structural relief, not behavioral conditioning, is what actually changes outcomes</em>.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<!-- PART 3 -->
+<!-- ============================================================ -->
+<div class="section-head">
+  <div class="section-num">Part 3</div>
+  <h2>Childhood Economic Conditions → Adult Health</h2>
+  <p>This is among the fastest-growing literatures in modern economics, with implications that should reshape political debate. The hypothesis is radical: <strong>economic shocks experienced in utero or in early childhood can predict cardiovascular disease, metabolic syndrome, and mortality in your sixties</strong>. Each study below tracks this through a different natural experiment, and each reaches a similar conclusion. Child poverty is not a moral concern that compassionate societies might address; it is an actuarial certainty whose costs are paid in midlife mortality decades later.</p>
+  <div class="question-box">"If a baby's family is poor today, will it show up in their cardiovascular health fifty years from now?"</div>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="hoynes">
+  <div class="study-num">20</div>
+  <span class="method-tag tag-natural">Natural experiment · policy rollout</span>
+  <h2>Hoynes, Schanzenbach & Almond — Food Stamps cut metabolic syndrome 50 years later</h2>
+  <h3>Hoynes, Schanzenbach & Almond · 2016</h3>
+  <p class="citation">Hoynes, H., Schanzenbach, D.W., & Almond, D. (2016). "Long-Run Impacts of Childhood Access to the Safety Net." <em>American Economic Review</em>, 106(4), 903-934.</p>
+
+  <p>This is one of the strongest causal studies in the entire childhood-to-adult-health literature. The methodological key: the US Food Stamp Program (now SNAP) rolled out across counties between 1961 and 1975 in <strong>staggered fashion</strong>. Some counties got the program in 1962, others not until 1971. The timing was driven by federal politics and county-level administrative capacity — not by the families being studied.</p>
+
+  <p>This produced a natural experiment: two children born in the same year in the same state could grow up under different food-assistance regimes depending on their county. Whether a particular baby's county had the program at birth was effectively random with respect to family characteristics.</p>
+
+  <div class="question">"If a baby received food assistance in 1965, what does their blood pressure look like in 2015?"</div>
+
+  <div class="method-box">
+    <strong>Why this design is so strong</strong>
+    Conventional observational studies struggle with the obvious confound: poor families have multiple disadvantages — bad genes, bad neighborhoods, bad schools — that all correlate with adult health. Hoynes and colleagues isolated the income-shock effect by exploiting county-by-cohort variation: <em>same birth year, same state, different county-level program access</em>. They used the Panel Study of Income Dynamics (PSID), which has tracked the same families for 50+ years, to link in-utero and early-childhood SNAP exposure to adult health and economic outcomes around age 50.
+  </div>
+
+  <div class="finding">
+    <strong>Key findings</strong>
+    Adults who had been exposed to Food Stamps in utero or early childhood show <strong>significantly lower rates of metabolic syndrome</strong> (the cluster of obesity, hypertension, type-2 diabetes, and high cholesterol) decades later. Women additionally show higher economic self-sufficiency: more education, higher income, lower welfare dependence. <em>The effects are still detectable fifty years after the policy intervention.</em>
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication — child welfare as long-run health investment</strong>
+    Food assistance is not a short-term anti-hunger policy. It is a <strong>cardiovascular and metabolic health investment with a 50-year payoff</strong>. The cost-benefit analysis transforms once you account for the prevention of midlife heart disease, diabetes, stroke. Conservative critiques of welfare ("cycle of dependency") miss the point entirely: the children who received assistance grew up to be more economically self-sufficient and healthier adults than counterfactual peers. Every euro spent on a hungry child today is a euro saved in stent surgery sixty years from now — except the human accounting is far better than the financial. <strong>Universal child allowances, school meal programs, prenatal cash transfers</strong> are, viewed correctly, the highest-return public investment available to any government. The neoliberal slogan that "we cannot afford" social spending is reversed by the data: societies that fail to invest in children will pay several multiples in adult morbidity and lost productivity.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="cherokee">
+  <div class="study-num">21</div>
+  <span class="method-tag tag-natural">Natural experiment · income shock</span>
+  <h2>Cherokee Casino — what happens when poor families get a check, twenty-five years on</h2>
+  <h3>Costello et al. · 2003 (and Akee et al. follow-ups 2010, 2018)</h3>
+  <p class="citation">Costello, E.J. et al. (2003). "Relationships between poverty and psychopathology: A natural experiment." <em>JAMA</em>, 290(15), 2023-2029. Akee, R. et al. (2010, 2018, 2022) follow-up studies.</p>
+
+  <p>Jane Costello's psychiatric study was tracking 1,400 children in rural North Carolina; about a quarter were Eastern Band Cherokee. In 1996, mid-study, the tribe opened a casino and began distributing per-capita profits to all members — about $4,000 per adult per year, with children's shares held in trust until age 18. Universal, unconditional, no work requirement, no behavioral test.</p>
+
+  <p>This created an accidental experiment: some children (Cherokee) received a household income boost; others (their non-Cherokee neighbors) didn't. Other than tribal membership, the children were comparable.</p>
+
+  <div class="question">"If a four-year-old's family suddenly has more money, what happens by age 25? By age 30?"</div>
+
+  <div class="finding">
+    <strong>Key findings — short and long term</strong>
+    Short-term (Costello 2003): children lifted out of poverty showed <strong>significant reductions in conduct and oppositional disorders</strong>. Through adolescence (Akee 2010): less crime involvement, better educational outcomes. <strong>Through age 30 (Akee 2018, Costello 2022): persistent improvements in mental health, lower rates of alcohol and drug dependence, higher economic self-sufficiency.</strong> The effects compound rather than fade.
+  </div>
+
+  <div class="method-box">
+    <strong>Why this is the gold standard for unconditional cash</strong>
+    The Cherokee transfer was unconditional and universal — closer to a basic income than to traditional means-tested welfare. The same children were tracked before and after, then followed for 25 years. The income shock was independent of family characteristics. This is as close to a randomized controlled trial of unconditional cash as the world has produced. Health insurance was not the channel; the tribe already provided care. The mechanism is the income itself, and what it allows in the household: less parental stress, better food, more stable housing, more parental attention.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication — the case for universal child benefits</strong>
+    The Cherokee experiment is the most cited evidence in the literature for unconditional cash transfers and universal child benefits. It directly refutes the conservative claim that unconditional money "creates dependency" — the children whose families received the transfer became <em>less</em> dependent on social systems as adults, not more. They were healthier, more educated, more employed. The implication is direct: <strong>countries that have implemented universal child allowances (most of Europe, Canada more recently, several US state pilots) are running long-term experiments whose payoffs in adult mental health and economic productivity will continue to compound for decades</strong>. Countries that have refused to do so (the US, most of Latin America, Turkey for the most part) are accumulating preventable disease and reduced human capital. The fiscal conservative argument against child benefits is, on the evidence, simply wrong: such programs are net fiscal positives over a generation.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="vandenberg">
+  <div class="study-num">22</div>
+  <span class="method-tag tag-natural">Historical data · business cycle</span>
+  <h2>Van den Berg, Lindeboom & Portrait — being born in a recession in the Netherlands</h2>
+  <h3>Van den Berg, Lindeboom & Portrait · 2006</h3>
+  <p class="citation">van den Berg, G.J., Lindeboom, M., & Portrait, F. (2006). "Economic Conditions Early in Life and Individual Mortality." <em>American Economic Review</em>, 96(1), 290-302.</p>
+
+  <p>One of the most cited natural experiments in the childhood-to-adult-health literature. The authors matched Dutch birth, marriage, and death records covering 1815-2000 with historical GDP data. <strong>Does the state of the macroeconomy at the time of your birth predict the year of your death decades later?</strong></p>
+
+  <p>Method: among adults dying between 1912 and 2000, look back to their year of birth, classify each year as a boom or recession in the Dutch economy, and compare lifespans. Critically, this varies independently of family characteristics — the family doesn't choose when the country enters a recession.</p>
+
+  <div class="question">"Does someone born in a Dutch recession in 1925 die earlier than someone born in the Dutch boom of 1928?"</div>
+
+  <div class="method-box">
+    <strong>Why this is so robust</strong>
+    The business cycle is independent of any single family — it is a macroeconomic shock applied uniformly to everyone born in that year. The dataset is enormous and very long (185 years of records). The authors compare adjacent business-cycle years (recession year vs. immediately preceding boom year), eliminating long-run cohort effects. The Netherlands has had universal health coverage throughout the modern era, removing the insurance channel. What remains is the direct biological imprint of the macroeconomic conditions of one's first year of life.
+  </div>
+
+  <div class="finding">
+    <strong>Key findings</strong>
+    Adults born in a recession year had <strong>8% higher mortality</strong> than those born in adjacent boom years. The effect persists across the life course — the imprint of one bad first year is detectable 70-80 years later. Subsequent work (van den Berg, Doblhammer & Christensen 2011 in Denmark; van den Berg, Lindeboom & Lopez 2009) showed the effect is <strong>concentrated among lower social classes</strong> — children born poor and into a recession bear the largest burden, exacerbating mortality inequality across generations.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication — counter-cyclical policy as health policy</strong>
+    Recessions are not just temporary economic events; they are <strong>permanent demographic shocks for the cohort born during them</strong>. This adds a dimension to macroeconomic stabilization that conventional accounting misses entirely. When central banks tolerate prolonged recessions to "control inflation," they are not just imposing temporary unemployment costs — they are inflicting lifelong health damage on infants who had no part in any economic decision. <strong>Active fiscal stabilization, automatic stabilizers, generous unemployment insurance, expanded social safety nets during downturns — these are not Keynesian luxuries but neonatal health interventions</strong>. Turkey's post-2018 macroeconomic crisis, with collapsing real wages and runaway inflation, is, by this evidence, producing a damaged birth cohort whose mortality consequences will be paid in the 2080s and 2090s. The political class that engineered the crisis will be long gone; the children who paid for it will be in their sixties.
+  </p>
+</div>
+
+<!-- ============================================================ -->
+<div class="study" id="banerjee">
+  <div class="study-num">23</div>
+  <span class="method-tag tag-natural">Historical natural experiment · IV</span>
+  <h2>Banerjee & Duflo — a beetle in the French vineyards (Phylloxera)</h2>
+  <h3>Banerjee, Duflo, Postel-Vinay & Watts · 2010</h3>
+  <p class="citation">Banerjee, A., Duflo, E., Postel-Vinay, G., & Watts, T. (2010). "Long-Run Health Impacts of Income Shocks: Wine and Phylloxera in Nineteenth-Century France." <em>Review of Economics and Statistics</em>, 92(4), 714-728.</p>
+
+  <p>This study contributes a creative natural experiment to the childhood-to-adult-health literature. Between 1863 and 1890, a small insect called <em>Phylloxera</em> devastated 40% of French vineyards. Wine-growing families experienced massive income losses.</p>
+
+  <p>The methodological elegance: Phylloxera <strong>spread slowly from the south of France to the north</strong>, arriving in different regions in different years. A child born in Bordeaux in 1869 was exposed; a child born in Champagne in the same year was not yet. The same type of family, same occupation, same culture — only the timing of the regional shock differed.</p>
+
+  <div class="question">"What happens to the lifelong health of children whose wine-growing families went broke in their first year of life?"</div>
+
+  <div class="method-box">
+    <strong>Why this method is exceptionally clean</strong>
+    The direction and speed of the insect's spread is determined by entomology, not by family characteristics. Same family type, only birth region differs — almost a randomly assigned treatment. The authors used <strong>adult height</strong> as their primary outcome — a well-validated marker of childhood nutrition. Conscript records preserve adult height for millions of French men, providing a massive longitudinal sample. The insect's natural progression provides the instrumental variable.
+  </div>
+
+  <div class="finding">
+    <strong>Key findings</strong>
+    Children born in Phylloxera-affected regions during the income shock were <strong>1.8 mm shorter</strong> at age 20 than the comparison group. For wine-grower children specifically, the effect was larger: <strong>0.6-0.9 cm shorter</strong>. This may sound trivial, but average French male height grew only 2 cm over the entire 19th century — a single childhood income shock erased a generation's worth of average growth. Mortality effects were not detected (likely because 19th-century mortality was dominated by infectious disease), but the long-run anthropometric scar is unambiguous.
+  </div>
+
+  <p class="policy">
+    <strong>Policy implication — the body remembers</strong>
+    The body of an adult contains a record of the economic conditions of their first year of life. Childhood economic shocks leave permanent biological imprints visible in height, in metabolic function, in mortality risk. This implies a <strong>generational accounting principle</strong> that no government in the world currently uses: the cost of a recession or austerity program must include not only its immediate unemployment effect but also the lifelong damage to the cohort born during it. By that accounting, austerity programs of the kind imposed on Greece (2010-2015), Spain, and Portugal — and by extension any country in IMF-supervised stabilization — were vastly more expensive than their architects acknowledged. <strong>Children pay for adult policy choices in their bodies for seventy years.</strong>
+  </p>
+</div>
+
+<hr>
+
+<div class="manifesto">
+  <div class="manifesto-title">The political summary</div>
+  <p>Twenty-three studies, drawn from the world's leading economics, medical, and scientific journals, converge on a structural conclusion: <strong>economic inequality is a major cause of physical and mental illness, operating through channels that universal health insurance cannot close, with effects that compound across generations</strong>.</p>
+  <p>Three distinct empirical claims, each with strong causal support:</p>
+  <p>1. <strong>Inequality is a determinant of health independent of income</strong>. People at identical income levels are sicker in more unequal societies. Visible class hierarchy is a chronic stressor. Status anxiety is a biological force. The "compress the distribution" project is, on the evidence, a "reduce mortality" project.</p>
+  <p>2. <strong>Universal health insurance, while necessary, does not close the gap</strong>. The evidence comes from settings where coverage is constitutionally guaranteed: the British NHS, the Nordics, post-war Germany, Medicare in the US. The income-mortality gradient persists. The remaining channels run through job security, household stability, neighborhood quality, social trust, environmental exposure, chronic stress, and the basic dignity of one's economic position.</p>
+  <p>3. <strong>Childhood economic conditions write themselves into adult bodies</strong>. Food assistance in 1965 reduces metabolic syndrome in 2015. A casino check at age four reduces drug dependence at age thirty. A Dutch recession at birth raises mortality at age seventy. A French vineyard pest in 1870 leaves measurable height loss in adult bodies decades later.</p>
+  <p>The political conclusion is unavoidable. <strong>Health justice is impossible without economic justice.</strong> The standard policy toolkit — expand insurance access, build hospitals, regulate drug prices — is necessary but radically insufficient. The deeper interventions are: progressive taxation of income and wealth, universal child allowances, robust unemployment insurance, strong labor unions, universal high-quality public services, mixed-income housing, public investment in low-income areas, counter-cyclical fiscal policy, just transition for displaced workers.</p>
+  <p>None of these are "health policies" in the conventional sense. All of them are health policies in the empirical sense. <strong>The wall between economic policy and health policy was always an administrative convenience; the data have demolished it.</strong></p>
+</div>
+
+<div class="callout">
+  <strong>One sentence per study, for memory</strong>
+  Whitehall: hierarchy alone, with universal health coverage, produces a 3× mortality gradient. Luttmer: a richer neighbor lowers your happiness as much as losing a third of your income. Eibner & Evans: relative deprivation drives smoking and obesity, holding income constant. Boyce: income rank, not income, predicts life satisfaction. Hamilton & Kawachi: immigrants from less equal countries gain health when they arrive. DeCelles & Norton: visible first class quadruples passenger rage. Layte & Whelan: status anxiety wears down everyone, not just the poor. Daly: the poor commit suicide more in rich neighborhoods. Oishi: economic growth without redistribution doesn't make the poor happier. Eisenberger: social pain activates the same brain regions as physical pain. Kiecolt-Glaser: hostile conversations slow wound healing 40%. Sullivan & von Wachter: a single layoff costs 1-1.5 years of life. Marcus: a spouse's job loss damages the partner's mental health. Marmot & Bobak: the post-Soviet transition cost Russia six years of male life expectancy. Kondo: 1.5 million OECD deaths per year are attributable to inequality above 0.30 Gini. Chetty: the richest live 14.6 years longer than the poorest, even with Medicare. Zheng: today's inequality kills you in twelve years. Elgar: the link runs through trust, not public spending alone. Haushofer & Fehr: poverty stress imposes a 13-IQ-point cognitive load. Hoynes-Schanzenbach-Almond: childhood Food Stamps reduce metabolic syndrome 50 years later. Cherokee: an unconditional check to poor children improves mental health and economic self-sufficiency for decades. Van den Berg: a recession at birth raises mortality 8% across the life course. Banerjee & Duflo: a 19th-century French vineyard pest left a measurable height loss in adult bodies a generation later.
+</div>
+
+<div class="glossary">
+  <h3>Methodological glossary</h3>
+
+  <dt>Correlation</dt>
+  <dd>Two things move together. Height and shoe size correlate — but neither causes the other.</dd>
+
+  <dt>Causality</dt>
+  <dd>Demonstrating that X is what makes Y happen, rather than that they merely move together. Much harder than correlation.</dd>
+
+  <dt>Natural experiment</dt>
+  <dd>An event outside researchers' control that produces a comparison resembling experimental conditions. The Cherokee casino opening, plant closures, the Soviet collapse, the Phylloxera outbreak, the SNAP rollout, an airplane's class layout — all natural experiments.</dd>
+
+  <dt>Lag analysis</dt>
+  <dd>Measuring how long after a cause the effect appears. If X → Y is causal, X must precede Y. Demonstrating an effect at a multi-year lag rules out reverse causation.</dd>
+
+  <dt>Mediator analysis</dt>
+  <dd>Testing whether the X → Y relationship runs through one mechanism (B) versus another (C). Which intervening variable accounts for the link?</dd>
+
+  <dt>Reverse causation</dt>
+  <dd>"Y → X" disguised as "X → Y." Sick people may lose their jobs, rather than job loss making them sick. Lag analyses and natural experiments are the tools to distinguish.</dd>
+
+  <dt>Confounding variable</dt>
+  <dd>A third variable that affects both X and Y. Childhood circumstances may affect both adult income and adult health; if not controlled for, the apparent income-health link will be biased.</dd>
+
+  <dt>Cohort study</dt>
+  <dd>Following the same group of individuals over many years. Whitehall has run since 1967; Zheng followed his sample 21 years; PSID (used by Hoynes et al.) has tracked the same families for over 50 years.</dd>
+
+  <dt>Concentration index / Gini coefficient</dt>
+  <dd>A summary measure of inequality. 0 = perfect equality, 1 = perfect inequality. Turkey's Gini has hovered around 0.40-0.45 for years, well above the 0.30 threshold identified by Kondo et al.</dd>
+
+  <dt>Meta-analysis</dt>
+  <dd>Statistically combining the results of many independent studies. Stronger evidence than any single large study.</dd>
+
+  <dt>Allostatic load</dt>
+  <dd>The biological wear and tear from chronically activated stress responses. Measurable in cardiovascular, renal, neurological, and immune systems. Status anxiety is a major source.</dd>
+
+  <dt>Relative deprivation</dt>
+  <dd>The gap between one's own income and that of one's reference group. A psychosocial condition independent of absolute income — two people with the same wage can have different relative deprivation depending on whom they compare themselves to.</dd>
+
+  <dt>Status anxiety</dt>
+  <dd>Anxiety about one's place in the social hierarchy. Higher in unequal societies, and present across the income distribution — not just among the poor.</dd>
+
+  <dt>Easterlin paradox</dt>
+  <dd>The observation that countries do not become measurably happier as they grow richer. Boyce et al. (2010) and Oishi et al. (2011) explain it through the rank/inequality mechanism.</dd>
+
+  <dt>Fetal origins hypothesis</dt>
+  <dd>The thesis that conditions in utero or in early childhood (nutrition, stress, economic pressure, illness) permanently shape adult health. First proposed by David Barker; subsequently tested through major natural experiments by economists including Almond, Hoynes, and Banerjee.</dd>
+</div>
+
+</div>
+</body>
+</html>
